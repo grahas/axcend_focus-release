@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>axcend_focus_msgs</name>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
   <description>Messages for communicating with the Axcend Focus LC</description>
   <maintainer email="graham.harrison@axcendcorp.com">Axcend</maintainer>
   <license>TODO: License declaration</license>
@@ -11,6 +11,8 @@
   <buildtool_depend>rosidl_default_generators</buildtool_depend>
   
   <build_depend>builtin_interfaces</build_depend>
+
+  <depend>std_msgs</depend>
 
   <exec_depend>builtin_interfaces</exec_depend>
   <exec_depend>rosidl_default_runtime</exec_depend>
