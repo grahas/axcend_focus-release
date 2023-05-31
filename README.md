@@ -1,3 +1,26 @@
+## axcend_focus (foxy) - 0.0.3-1
+
+The packages in the `axcend_focus` repository were released into the `foxy` distro by running `/usr/bin/bloom-release --rosdistro foxy axcend_focus` on `Wed, 31 May 2023 21:25:26 -0000`
+
+The `axcend_focus_msgs` package was released.
+
+Version of package(s) in repository `axcend_focus`:
+
+- upstream repository: https://github.com/grahas/axcend_focus.git
+- release repository: unknown
+- rosdistro version: `null`
+- old version: `0.0.2-1`
+- new version: `0.0.3-1`
+
+Versions of tools used:
+
+- bloom version: `0.11.2`
+- catkin_pkg version: `0.5.2`
+- rosdep version: `0.22.2`
+- rosdistro version: `0.9.0`
+- vcstools version: `0.1.42`
+
+
 ## axcend_focus (foxy) - 0.0.2-1
 
 The packages in the `axcend_focus` repository were released into the `foxy` distro by running `/usr/bin/bloom-release --new-track --rosdistro foxy --track foxy axcend_focus` on `Wed, 31 May 2023 20:59:09 -0000`
