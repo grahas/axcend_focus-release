@@ -23,5 +23,5 @@ tracks:
     release_tag: :{version}
     ros_distro: foxy
     vcs_type: git
-    vcs_uri: https://gitlab.com/axcend/v3-hw-and-sw/axcend_focus.git
+    vcs_uri: https://github.com/grahas/axcend_focus.git
     version: :{auto}
