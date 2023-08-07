@@ -1,11 +1,11 @@
 # Defining request message
 uint8 version
 uint8 revision
-string[12] serial_number
+string serial_number 12
 uint8 max_pressure_rating
 uint8 has_oven
 uint8 is_third_party
-string[6] last_write_date
+string last_write_date 6
 uint32 total_run_time
 uint8 cartridge_flags
 uint8 detector_count
@@ -19,11 +19,11 @@ uint8 column_count
 uint8 column_1_length
 uint16 column_1_diameter
 uint8 column_1_particle_size
-string[12] column_1_description
+string column_1_description 12
 uint8 column_2_length
 uint16 column_2_diameter
 uint8 column_2_particle_size
-string[12] column_2_description
+string column_2_description 12
 uint8 detector_1_adc_gain
 uint8 detector_1_adc_delay
 uint8 detector_1_led_pot

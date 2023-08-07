@@ -28,7 +28,10 @@ rosidl_generate_interfaces(${PROJECT_NAME}
     ${msg_files}
     ${srv_files}
     ${action_files}
-    DEPENDENCIES action_msgs std_msgs builtin_interfaces
+    DEPENDENCIES 
+      action_msgs 
+      std_msgs 
+      builtin_interfaces
 )
 
 ament_export_dependencies(rosidl_default_runtime)
