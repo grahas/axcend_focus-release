@@ -1,3 +1,26 @@
+## axcend_focus (foxy) - 3.0.6-1
+
+The packages in the `axcend_focus` repository were released into the `foxy` distro by running `/usr/bin/bloom-release --rosdistro foxy axcend_focus` on `Mon, 07 Aug 2023 18:10:37 -0000`
+
+The `axcend_focus_custom_interfaces` package was released.
+
+Version of package(s) in repository `axcend_focus`:
+
+- upstream repository: https://github.com/grahas/axcend_focus.git
+- release repository: unknown
+- rosdistro version: `null`
+- old version: `3.0.5-1`
+- new version: `3.0.6-1`
+
+Versions of tools used:
+
+- bloom version: `0.11.2`
+- catkin_pkg version: `0.5.2`
+- rosdep version: `0.22.2`
+- rosdistro version: `0.9.0`
+- vcstools version: `0.1.42`
+
+
 ## axcend_focus (foxy) - 3.0.5-1
 
 The packages in the `axcend_focus` repository were released into the `foxy` distro by running `/usr/bin/bloom-release --rosdistro foxy axcend_focus` on `Fri, 04 Aug 2023 22:35:35 -0000`
