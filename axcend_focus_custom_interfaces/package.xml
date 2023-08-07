@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>axcend_focus_custom_interfaces</name>
-  <version>3.0.5</version>
+  <version>3.0.6</version>
   <description>TODO: Package description</description>
   <maintainer email="graham.harrison@axcendcorp.com">ubuntu</maintainer>
   <license>TODO: License declaration</license>
@@ -13,7 +13,6 @@
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>
   <depend>action_msgs</depend>
-  <depend>message_generation</depend>
   <depend>builtin_interfaces</depend>
   <depend>rosidl_default_generators</depend>
   <depend>rosidl_default_runtime</depend>

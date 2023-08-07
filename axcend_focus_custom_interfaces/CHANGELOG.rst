@@ -2,6 +2,11 @@
 Changelog for package axcend_focus_custom_interfaces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.0.6 (2023-08-07)
+------------------
+* update interface
+* Contributors: Graham
+
 3.0.5 (2023-08-04)
 ------------------
 * update package dependencies
