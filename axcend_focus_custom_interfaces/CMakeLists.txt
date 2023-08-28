@@ -13,15 +13,28 @@ find_package(builtin_interfaces REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 set(msg_files
+  "msg/CartridgeStatus.msg"
+  "msg/CartridgeDetectorStatus.msg"
+  "msg/CartridgeOvenStatus.msg"
   "msg/PumpStatus.msg"
+  "msg/ValveStatus.msg"
+
 )
 
 set(action_files
     "action/CartridgeOvenPreheat.action"
+    "action/Pump.action"
+    "action/PumpMove.action"
+    "action/PumpPositioning.action"
+    "action/PumpService.action"
+    "action/PumpSystemStabilization.action"
+    "action/PumpVoidRemoval.action"
+    "action/SolventExchange.action"
+    "action/ValveRotate.action"
 )
 
 set(srv_files
-  "srv/WriteCartridgeMemory.srv"
+  "srv/CartridgeMemoryWrite.srv"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}

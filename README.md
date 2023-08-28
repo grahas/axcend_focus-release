@@ -2,15 +2,19 @@
 
 ## Workflow for building ros2 package and getting them on the board
 
+## Setup
+
+Open the Ubuntu WSL VM and build server VM
+
 ### Clean workspace
 
 rm -r build install log
 
-Build package
+### Build package
 
 colcon build --packages-select axcend_focus_custom_interfaces
 
-update changelog
+### update changelog
 
 catkin_generate_changelog
 
@@ -31,3 +35,5 @@ scp /home/axcend/OSTL-k/build-openstlinuxweston-stm32mp1/tmp-glibc/deploy/deb/co
 In VM
 
 superflore-gen-oe-recipes --dry-run --ros-distro foxy --only axcend_focus
+
+Requirements for the pumps

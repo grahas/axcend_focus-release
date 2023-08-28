@@ -1,0 +1,21 @@
+
+# Enumerated positions for Valve 1 (four positions)
+uint8 VALVE_SOLVENT_FILL = 0
+uint8 VALVE_SOLVENT_BLOCK = 1
+uint8 VALVE_SOLVENT_A = 2
+uint8 VALVE_SOLVENT_AB = 3
+
+# Enumerated positions for Valve 2 (two positions)
+uint8 VALVE_INJECT_LOAD = 1
+uint8 VALVE_INJECT_INJECT = 0
+
+# Goal definition
+uint8[] valve_position # Index 0 is valve 1, index 1 is valve 2
+
+---
+# Results definition
+bool success
+
+---
+# Feedback definition
+int32[] encoder_ticks # Index 0 is valve 1, index 1 is valve 2
