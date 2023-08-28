@@ -2,7 +2,7 @@
 uint8 version
 uint8 revision
 string serial_number 12
-uint8 max_pressure_rating
+uint8 max_pressure_rating # In hundreds of PSI
 uint8 has_oven
 uint8 is_third_party
 string last_write_date 6
@@ -40,3 +40,4 @@ uint8 bits_to_remove
 # Defining response message
 # Populate with necessary data as per use-case
 bool success
+
