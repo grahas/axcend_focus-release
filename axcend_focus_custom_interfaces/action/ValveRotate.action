@@ -10,7 +10,7 @@ uint8 VALVE_INJECT_LOAD = 1
 uint8 VALVE_INJECT_INJECT = 0
 
 # Goal definition
-uint8[] valve_position # Index 0 is valve 1, index 1 is valve 2
+uint8[] valve_position # Index 0 is solvent valve, index 1 is injection valve
 
 ---
 # Results definition
