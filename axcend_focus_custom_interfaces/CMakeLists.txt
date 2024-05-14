@@ -34,7 +34,8 @@ set(action_files
 )
 
 set(srv_files
-  "srv/CartridgeMemoryWrite.srv"
+  "srv/CartridgeMemoryReadWrite.srv"
+  "srv/SystemParametersUpdate.srv"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}
