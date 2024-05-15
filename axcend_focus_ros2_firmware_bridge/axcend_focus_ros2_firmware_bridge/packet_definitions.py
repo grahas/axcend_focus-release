@@ -5,9 +5,8 @@ from enum import Enum
 import os
 import json
 import platform
-import pkg_resources
 
-PACKET_MAX_LENGTH = 16 # bytes
+PACKET_MAX_LENGTH = 16  # bytes
 PROTO_PREFIX = b"proto1 "
 
 
@@ -18,6 +17,7 @@ class DataAcquisitionState(Enum):
     CARTRIDGE_ONLY = 1
     VALVE_PUMPS_ONLY = 2
     CARTRIDGE_AND_VALVE_PUMPS = 3
+
 
 class Field(ctypes.Structure):
     _fields_ = [
@@ -30,22 +30,22 @@ class Field(ctypes.Structure):
 
 
 class Packet(ctypes.Union):
-    _fields_ = [("raw", ctypes.c_uint8 * PACKET_MAX_LENGTH), 
-                ("field", Field)]
+    _fields_ = [("raw", ctypes.c_uint8 * PACKET_MAX_LENGTH), ("field", Field)]
 
 
 class _PhaseInfoBits(ctypes.Structure):
-    _fields_ = [("phase", ctypes.c_uint8, 3),
-                ("valveB", ctypes.c_uint8, 1),
-                ("valveA", ctypes.c_uint8, 2),
-                ("moving", ctypes.c_uint8, 1),
-                ("direction", ctypes.c_uint8, 1)]
+    _fields_ = [
+        ("phase", ctypes.c_uint8, 3),
+        ("valveB", ctypes.c_uint8, 1),
+        ("valveA", ctypes.c_uint8, 2),
+        ("moving", ctypes.c_uint8, 1),
+        ("direction", ctypes.c_uint8, 1),
+    ]
 
 
 class PhaseInfo(ctypes.Union):
-    _fields_ = [("raw", ctypes.c_uint8),
-                ("bits", _PhaseInfoBits)]
-    
+    _fields_ = [("raw", ctypes.c_uint8), ("bits", _PhaseInfoBits)]
+
 
 class _PressureBits(ctypes.Structure):
     _pack_ = 1
@@ -59,12 +59,13 @@ class _PressureBits(ctypes.Structure):
         ("positionA", ctypes.c_uint16),
         ("positionB", ctypes.c_uint16),
         ("flowRate", ctypes.c_uint16),
-        ("end", ctypes.c_uint8)]
+        ("end", ctypes.c_uint8),
+    ]
 
 
 class PressureInfo(ctypes.Union):
-    _fields_ = [("raw", ctypes.c_uint8 * PACKET_MAX_LENGTH),
-                ("fields", _PressureBits)]
+    _fields_ = [("raw", ctypes.c_uint8 * PACKET_MAX_LENGTH), ("fields", _PressureBits)]
+
 
 class SystemParametersFields(ctypes.Structure):
     _pack_ = 1
@@ -152,16 +153,20 @@ class PacketTranscoder:
     def __init__(self):
 
         # Load the packet transcoder shared library
-        if platform.system() == "Windows":
-            target_library = "packets.dll"
-        elif platform.machine() == "armv7l":  # armhf
-            target_library = "packets_armv7l.so"
+        if platform.machine() == "armv7l":  # armhf
+            library_path = "/usr/lib/axcend/packets.so"
         elif platform.machine() == "x86_64":  # x64
             target_library = "packets_x86_64.so"
+            script_dir = os.path.dirname(
+                os.path.realpath(__file__)
+            )  # Get the directory of the current script
+            library_path = os.path.join(
+                script_dir, target_library
+            )  # Construct the full path to the library
         else:
-            raise NotImplementedError(f"Platform '{platform.system()}' is not supported.")
-
-        library_path = pkg_resources.resource_filename('axcend_focus_ros2_firmware_bridge', target_library)
+            raise NotImplementedError(
+                f"Platform '{platform.system()}' is not supported."
+            )
 
         self.packet_transcoder = self.load_packet_transcoder(library_path)
 
@@ -389,7 +394,7 @@ class PacketTranscoder:
         packet_string += bytes(packet.raw).hex().upper().encode()
 
         return packet_string
-    
+
     def create_data_acquisition_state_packet(self, state: DataAcquisitionState) -> str:
         """Create a data acquisition state packet."""
         # Create a blank packet
@@ -422,7 +427,6 @@ class PacketTranscoder:
         packet_string = PROTO_PREFIX + bytes(packet.raw).hex().upper().encode()
         return packet_string
 
-
     def parse_values_oven_status_packet(self, packet: Packet) -> list:
         """Parse the values from the oven packet."""
         # Extract the data from the packet
@@ -448,7 +452,9 @@ class PacketTranscoder:
         pressure_info = PressureInfo()
 
         # Copy the packet data into the pressure info object
-        ctypes.memmove(ctypes.byref(pressure_info.raw), ctypes.byref(packet.raw), len(packet.raw))
+        ctypes.memmove(
+            ctypes.byref(pressure_info.raw), ctypes.byref(packet.raw), len(packet.raw)
+        )
 
         # Extract the pressure values
         phase = pressure_info.fields.phase.raw
@@ -459,5 +465,12 @@ class PacketTranscoder:
         position_b = pressure_info.fields.positionB
         flow_rate = pressure_info.fields.flowRate
 
-        return [phase, stream_id, pressure_a, pressure_b, position_a, position_b, flow_rate]
-
+        return [
+            phase,
+            stream_id,
+            pressure_a,
+            pressure_b,
+            position_a,
+            position_b,
+            flow_rate,
+        ]

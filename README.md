@@ -43,6 +43,7 @@ https://github.com/grahas/axcend_focus.git
 
 In build-server VM ->
 
+0. In the rosdistro workspace in the VM
 1. export ROSDISTRO_INDEX_URL=file:///home/axcend/Documents/GitHub/rosdistro/index-v4.yaml
 2. update the version number in distribution.yaml
 3. cd ~/Documents/GitHub/rosdistro/foxy
@@ -51,8 +52,9 @@ In build-server VM ->
 ### Generate the Recipe
 
 In build-server VM ->
+0. In the same terminal as before
+1. superflore-gen-oe-recipes --dry-run --ros-distro foxy --only axcend_focus_custom_interfaces axcend_focus_front_panel_button axcend_focus_launch axcend_focus_legacy_compatibility_layer axcend_focus_ros2_firmware_bridge --output-repository-path ~/Documents/GitHub/test-meta-ros
 
-1. superflore-gen-oe-recipes --dry-run --ros-distro foxy --only axcend_focus_custom_interfaces --output-repository-path ~/Documents/GitHub/test-meta-ros
 
 ### Update Existing Recipe
 
@@ -62,6 +64,11 @@ In build-server VM ->
 ### Bake Changes
 
 1. bitbake axcend-focus-custom-interfaces
+3. bitbake axcend-focus-front-panel-button
+4. bitbake axcend-focus-launch
+5. bitbake axcend-focus-legacy-compatibility-layer
+6. bitbake axcend-focus-ros2-firmware-bridge
+7. bitbake axcend-focus-test-utils-package
 
 ### Git repo
 1. Change git repo back to private
