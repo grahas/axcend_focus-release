@@ -1,0 +1,22 @@
+
+# Goal definition
+# This command is used to dispense a volume of liquid from the pump to ensure consistent starting conditions
+
+uint8 ratio # Percentage of pump B to pump at, valid range 0-100
+
+# Flow rate of the pump in uL/ min to start the pressure algorithm at.
+# This is the last data point from a previous equilibration run. 
+# This value should be looked up from a table but that table isn't currently available. 
+# This value should be deprecated in the future when that value can be computed
+float32 flow_rate # in uL/min
+
+uint16 target_pressure # Target pressure of the pump in PSI, 
+uint16 target_volume # Target volume of the liquid to dispense in uL, if 0 then use the system default volume
+
+---
+# Result definition
+bool success # True if the pump was able to complete the action
+
+---
+# Feedback definition
+int32 volume_remaining # Volume of liquid remaining in the pump in uL
