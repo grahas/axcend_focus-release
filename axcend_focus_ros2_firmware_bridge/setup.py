@@ -4,7 +4,7 @@ package_name = "axcend_focus_ros2_firmware_bridge"
 
 setup(
     name=package_name,
-    version="3.1.3",
+    version="3.1.4",
     packages=[package_name],
     package_data={
     },
