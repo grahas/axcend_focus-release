@@ -87,8 +87,8 @@ class FirmwareNode(Node):
             self.firmware_serial_port = get_hardware_firmware_serial_port()
 
         # Establish RPmsg port
-        heart_beat_packet = self.packet_transcoder.create_heartbeat_packet()
-        self.firmware_serial_port.write(heart_beat_packet.encode())
+        self.heart_beat_packet = self.packet_transcoder.create_heartbeat_packet()
+        self.firmware_serial_port.write(self.heart_beat_packet.encode())
 
         # Used for coordinating the threads lifecycle
         self.is_alive = threading.Event()
@@ -180,10 +180,11 @@ class FirmwareNode(Node):
     def check_heartbeat(self):
         """Check if the firmware is still alive."""
         while self.is_alive.is_set():
+            self.transmit_queue.put(self.heart_beat_packet.encode())
             time.sleep(1)
             if time.time() - self.last_heartbeat_time > self.heartbeat_timeout:
-                print("Firmware is not responding!")
-                break
+                self.get_logger().error("Firmware is not responding!")
+                # break
 
     def handle_heart_beat_packet(self, _):
         """Handle the heart beat packet."""
@@ -335,6 +336,7 @@ class FirmwareNode(Node):
                 packet = self.transmit_queue.get(timeout=1)
                 if packet:
                     self.firmware_serial_port.write(packet)
+                    print(f"Sent: {packet}")
 
             except queue.Empty:
                 # No items in the queue this time, just continue with the loop
@@ -356,6 +358,9 @@ class FirmwareNode(Node):
                         self.packet_transcoder.decode_packet(received_data)
                     )
                     self.packet_handlers[(prefix, packet_type)](packet)
+
+                    # Print for debugging
+                    print(f"Received: {received_data}")
 
             except serial.SerialTimeoutException:
                 # No data received this time, just continue with the loop

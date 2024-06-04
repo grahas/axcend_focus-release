@@ -39,6 +39,9 @@ source install/setup.bash
 
 https://github.com/grahas/axcend_focus.git
 
+### Update changes in rosdep/python.yaml
+rosdep update --include-eol-distros
+
 ### Rebuild Package Index
 
 In build-server VM ->
@@ -53,7 +56,7 @@ In build-server VM ->
 
 In build-server VM ->
 0. In the same terminal as before
-1. superflore-gen-oe-recipes --dry-run --ros-distro foxy --only axcend_focus_custom_interfaces axcend_focus_front_panel_button axcend_focus_launch axcend_focus_legacy_compatibility_layer axcend_focus_ros2_firmware_bridge --output-repository-path ~/Documents/GitHub/test-meta-ros
+1. superflore-gen-oe-recipes --dry-run --ros-distro foxy --only axcend_focus_custom_interfaces axcend_focus_front_panel_button axcend_focus_launch axcend_focus_legacy_compatibility_layer axcend_focus_ros2_firmware_bridge axcend_focus_test_utils_package --output-repository-path ~/Documents/GitHub/test-meta-ros
 
 
 ### Update Existing Recipe
@@ -76,19 +79,19 @@ In build-server VM ->
 ### Copy Changes to Board
 
 1. Update version number if following command
-2. scp /home/axcend/OSTL-k/build-openstlinuxweston-stm32mp1/tmp-glibc/deploy/deb/cortexa7t2hf-neon-vfpv4/axcend-focus-custom-interfaces_3.0.8-1-r0.0_armhf.deb root@192.168.1.188:/tmp
+2. To find the package name use: find /home/axcend/OSTL-k/build-openstlinuxweston-stm32mp1/tmp-glibc/deploy/deb -name axcend* 
+4. scp /home/axcend/OSTL-k/build-openstlinuxweston-stm32mp1/tmp-glibc/deploy/deb/cortexa7t2hf-neon-vfpv4/axcend-focus-custom-interfaces_3.1.3-1-r0.0_armhf.deb root@192.168.1.121:/tmp
+5. scp /home/axcend/OSTL-k/build-openstlinuxweston-stm32mp1/tmp-glibc/deploy/deb/cortexa7t2hf-neon-vfpv4/axcend-focus-legacy-compatibility-layer_3.1.3-1-r0.0_armhf.deb root@192.168.1.121:/tmp
+6. scp /home/axcend/OSTL-k/build-openstlinuxweston-stm32mp1/tmp-glibc/deploy/deb/cortexa7t2hf-neon-vfpv4/axcend-focus-ros2-firmware-bridge_3.1.3-1-r0.0_armhf.deb root@192.168.1.121:/tmp
+7. scp /home/axcend/OSTL-k/build-openstlinuxweston-stm32mp1/tmp-glibc/deploy/deb/cortexa7t2hf-neon-vfpv4/axcend-packet-library_1.0+git0+2c549a3a48-r0.4_armhf.deb root@192.168.1.121:/tmp
+8. scp /home/axcend/OSTL-k/build-openstlinuxweston-stm32mp1/tmp-glibc/deploy/deb/cortexa7t2hf-neon-vfpv4/axcend-focus-launch_3.1.3-1-r0.0_armhf.deb root@192.168.1.121:/tmp
+9. scp /home/axcend/OSTL-k/build-openstlinuxweston-stm32mp1/tmp-glibc/deploy/deb/cortexa7t2hf-neon-vfpv4/axcend-focus-test-utils-package_3.1.3-1-r0.0_armhf.deb root@192.168.1.121:/tmp
+10. 
 
 ### Install Changes
 
 1. Update version number in following command
 2. dpkg -i /tmp/axcend-focus-custom-interfaces_3.0.8-1-r0.0_armhf.deb
-
-## Transfer Bridge to Board
-
-### Start
-
-1. cd /mnt/c/Users/gupyf/Documents/GitHub/firmware_octavo/OSD32MP157C-512M-BAA_MinimalConfig/CA7/Bridge
-2. scp *.tcl root@192.168.1.188:/axcend/bridge/
 
 ## Create a new package
 
@@ -142,6 +145,7 @@ colcon build --symlink-install
 # Build a specific package
 colcon build --packages-select axcend_focus_ros2_firmware_bridge 
 colcon build --packages-select axcend_focus_custom_interfaces 
+colcon build --packages-select axcend_focus_legacy_compatibility_layer
 colcon build --packages-select axcend_focus_launch
 colcon build --packages-select axcend_focus_test_utils --symlink-install
 colcon build --symlink-install
@@ -150,6 +154,7 @@ colcon build --symlink-install
 export ENVIRONMENT=development
 export ENVIRONMENT=production
 ros2 launch axcend_focus_launch application_launch.py
+ros2 run axcend_focus_ros2_firmware_bridge firmware_bridge.py
 
 # Openinging the workspace
 open from the axcend_focus directory that has all the packages as the root of the workspace.
@@ -158,3 +163,64 @@ source install/setup.bash
 cd /mnt/c/Users/gupyf/Documents/GitHub/ros2_ws/src/axcend_focus
 code .
 This will make all the paths work
+
+# Copy changes to the board
+scp -o StrictHostKeyChecking=no -r /mnt/c/Users/gupyf/Documents/GitHub/ros2_ws/install root@192.168.7.1:/tmp
+source /tmp/install/setup.bash
+
+scp -o StrictHostKeyChecking=no /mnt/c/Users/gupyf/Documents/GitHub/ros2_ws/src/axcend_focus/axcend_focus_ros2_firmware_bridge/axcend_focus_ros2_firmware_bridge/packet_definitions.py root@192.168.7.1:/usr/lib/python3.10/site-packages/axcend_focus_ros2_firmware_bridge/packet_definitions.py
+
+scp -o StrictHostKeyChecking=no  /mnt/c/Users/gupyf/Documents/GitHub/ros2_ws/src/axcend_focus/axcend_focus_legacy_compatibility_layer/axcend_focus_legacy_compatibility_layer/legacy_compatibility_interface.py root@192.168.7.1:/usr/lib/python3.10/site-packages/axcend_focus_legacy_compatibility_layer/legacy_compatibility_interface.py
+
+scp -o StrictHostKeyChecking=no  /mnt/c/Users/gupyf/Documents/GitHub/ros2_ws/src/axcend_focus/axcend_focus_ros2_firmware_bridge/axcend_focus_ros2_firmware_bridge/firmware_bridge.py root@192.168.7.1:/usr/lib/python3.10/site-packages/axcend_focus_ros2_firmware_bridge/firmware_bridge.py
+
+
+
+server {
+    listen 80;
+
+    location / {
+        proxy_pass http://localhost:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+
+
+#!/bin/bash
+
+# Network interface to monitor
+INTERFACE="eth0"
+
+# Threshold of network usage to trigger speed increase, in bytes per second
+THRESHOLD=1000000
+
+# Speeds for the network interface
+SPEED_LOW="10mbit"
+SPEED_HIGH="100mbit"
+
+# Use tc to set the initial speed
+tc qdisc add dev $INTERFACE root handle 1: htb default 11
+tc class add dev $INTERFACE parent 1: classid 1:1 htb rate $SPEED_LOW
+tc class add dev $INTERFACE parent 1:1 classid 1:11 htb rate $SPEED_LOW
+
+while true; do
+    # Get the current network usage
+    RX_BYTES1=$(cat /sys/class/net/$INTERFACE/statistics/rx_bytes)
+    sleep 1
+    RX_BYTES2=$(cat /sys/class/net/$INTERFACE/statistics/rx_bytes)
+
+    # Calculate the bytes per second
+    BPS=$((RX_BYTES2 - RX_BYTES1))
+
+    # Check if the network usage is above the threshold
+    if [ $BPS -gt $THRESHOLD ]; then
+        # Increase the speed
+        tc class change dev $INTERFACE parent 1:1 classid 1:11 htb rate $SPEED_HIGH
+    else
+        # Decrease the speed
+        tc class change dev $INTERFACE parent 1:1 classid 1:11 htb rate $SPEED_LOW
+    fi
+done
