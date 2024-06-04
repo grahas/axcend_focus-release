@@ -12,12 +12,15 @@ from queue import Queue
 
 import rclpy
 from flask import Blueprint, Flask, jsonify, request
+from flask_cors import CORS
 from std_msgs.msg import String
 
 from axcend_focus_legacy_compatibility_layer.legacy_compatibility_interface_node import \
     LegacyCompatibilityInterface
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
+
 legacy_compatibility_interface = None
 
 # Simulating the system state and configuration
@@ -205,6 +208,8 @@ def write():
         msg.data = message[i: i + 32]
         msg.data = "proto1 " + msg.data
         system_state["firmware_UART_write_queue"].put(msg)
+        # Print the message to the console
+        print(msg.data)
         bytes_sent += len(msg.data)
 
     return generate_json_response("write", bytes_sent)
@@ -293,7 +298,7 @@ def main():
     )
 
     flask_thread = threading.Thread(
-        target=app.run, kwargs={"use_reloader": False, "port": 8000}
+        target=app.run, kwargs={"host": "0.0.0.0", "use_reloader": False, "port": 8000}
     )
     flask_thread.start()
 
