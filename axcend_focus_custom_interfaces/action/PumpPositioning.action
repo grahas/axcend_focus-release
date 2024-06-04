@@ -1,0 +1,13 @@
+# PumpFill.action
+# Interface for filling the pumps to a specific volume
+
+# Goal definition
+int32[] volume # In uL, index 0 is the volume for pump 0, etc.
+
+---
+# Result definition
+bool success
+
+---
+# Feedback definition
+int32 volume_remaining # In uL
