@@ -4,7 +4,7 @@ import ctypes
 from enum import Enum
 import os
 import json
-import platform
+from ctypes.util import find_library
 
 PACKET_MAX_LENGTH = 16  # bytes
 PROTO_PREFIX = b"proto1 "
@@ -153,35 +153,23 @@ class PacketTranscoder:
     def __init__(self):
 
         # Load the packet transcoder shared library
-        if platform.machine() == "armv7l":  # armhf
-            library_path = "/usr/lib/axcend/packets.so"
-        elif platform.machine() == "x86_64":  # x64
-            target_library = "packets_x86_64.so"
-            script_dir = os.path.dirname(
-                os.path.realpath(__file__)
-            )  # Get the directory of the current script
-            library_path = os.path.join(
-                script_dir, target_library
-            )  # Construct the full path to the library
-        else:
-            raise NotImplementedError(
-                f"Platform '{platform.system()}' is not supported."
-            )
+        self.packet_transcoder = self.load_packet_transcoder()
 
-        self.packet_transcoder = self.load_packet_transcoder(library_path)
-
-    def load_packet_transcoder(self, lib_path: str) -> ctypes.CDLL:
+    def load_packet_transcoder(self) -> ctypes.CDLL:
         """
         Load a packet transcoder shared library.
 
         Load the packet encoding / decoding library and define argument types
         and return types for various functions within the library.
         """
-        if not os.path.isfile(lib_path):
-            raise FileNotFoundError(f"The library '{lib_path}' does not exist.")
+        target_library_name = "axcend_packets"
+        target_library_path = find_library(target_library_name)
+
+        if not target_library_path:
+            raise FileNotFoundError(f"The library '{target_library_name}' does not exist.")
 
         print("Loading the packet encoding / decoding library")
-        packet_transcoder = ctypes.CDLL(lib_path)
+        packet_transcoder = ctypes.CDLL(target_library_path)
 
         # Define the argument types and return type for each function
         packet_transcoder.packetEncode_0.argtypes = [
