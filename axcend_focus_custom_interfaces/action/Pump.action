@@ -1,0 +1,15 @@
+
+# Goal definition
+uint8 start # Percentage of percent of the B pump to start at
+uint8 end # Percentage of percent of the B pump to end at
+uint16 time # Time in seconds for the pump to run
+float32 flow_rate # Flow rate of the pump in uL/ 
+uint16 target_pressure # Target pressure of the pump in PSI, if 0 then the pump will not use pressure control
+
+---
+# Result definition
+bool success # True if the pump was able to complete the action
+
+---
+# Feedback definition
+int32 time_remaining # Time remaining in seconds
