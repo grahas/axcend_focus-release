@@ -12,5 +12,10 @@ def generate_launch_description():
             package='axcend_focus_legacy_compatibility_layer',
             executable='legacy_compatibility_interface',
             name='legacy_compatibility_interface'
+        ),
+        Node(
+            package='axcend_focus_front_panel_button',
+            executable='front_panel_button_controller',
+            name='front_panel_button_controller',
         )
     ])

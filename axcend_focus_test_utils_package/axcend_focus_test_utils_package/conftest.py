@@ -1,4 +1,5 @@
 """Conftest file for the axcend_focus_test_utils_package package."""
+
 import os
 from collections import deque
 from threading import Thread
@@ -7,12 +8,14 @@ import pytest
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Temperature
-from std_msgs.msg import String
+from std_msgs.msg import String, Header
 
-from axcend_focus_custom_interfaces.msg import PumpStatus
+from axcend_focus_custom_interfaces.msg import PumpStatus, CartridgeOvenStatus
 from axcend_focus_custom_interfaces.srv import CartridgeMemoryReadWrite
 from axcend_focus_ros2_firmware_bridge.firmware_bridge import (
-    DataAcquisitionState, FirmwareNode)
+    DataAcquisitionState,
+    FirmwareNode,
+)
 from axcend_focus_test_utils_package.mock_serial_port import mock_serial_port
 
 # Get the current directory
@@ -28,7 +31,7 @@ json_file_path = os.path.join(current_dir, relative_path)
 os.environ["SYS_PARAMS_FILE"] = json_file_path
 
 # Set the ENVIRONMENT environment variable
-os.environ['ENVIRONMENT'] = 'development'
+os.environ["ENVIRONMENT"] = "development"
 
 
 class ExampleNode(Node):
@@ -58,6 +61,17 @@ class ExampleNode(Node):
         )
         self.pump_status_cache = PumpStatus()
 
+        # Create a subscriber for cartridge oven data
+        self.cartridge_oven_status_subscription = self.create_subscription(
+            CartridgeOvenStatus,
+            "cartridge_oven_status",
+            self.cartridge_oven_status_callback,
+            10,
+        )
+        # Cache for the cartridge oven data
+        self.cartridge_oven_status_cache = CartridgeOvenStatus()
+        self.cartridge_oven_status_cache.header = Header()
+
     def listener_callback(self, msg):
         """Callback function for the cartridge temperature subscriber."""
         self.cartridge_temperature.append(msg.temperature)
@@ -66,7 +80,9 @@ class ExampleNode(Node):
         """Send a request to the cartridge_memory_read_write service."""
         request = CartridgeMemoryReadWrite.Request()
         request.command = "read"
-        while not self.cartridge_memory_read_write_client.wait_for_service(timeout_sec=1.0):
+        while not self.cartridge_memory_read_write_client.wait_for_service(
+            timeout_sec=1.0
+        ):
             self.get_logger().info("Service not available, waiting again...")
 
         future = self.cartridge_memory_read_write_client.call_async(request)
@@ -82,9 +98,13 @@ class ExampleNode(Node):
         """Callback function for the pump status subscriber."""
         self.pump_status_cache = msg
 
+    def cartridge_oven_status_callback(self, msg):
+        """Callback function for the cartridge oven status subscriber."""
+        self.cartridge_oven_status_cache = msg
+
 
 @pytest.fixture
-def nodes(mock_serial_port):
+def nodes():
     """Create the firmware node and the test node."""
     # Start ROS 2 client library
     rclpy.init()
@@ -93,7 +113,7 @@ def nodes(mock_serial_port):
     executor = rclpy.executors.MultiThreadedExecutor()
 
     # Add nodes to executor
-    firmware_node = FirmwareNode(firmware_serial_port=mock_serial_port)
+    firmware_node = FirmwareNode()
     test_node = ExampleNode()
     executor.add_node(firmware_node)
     executor.add_node(test_node)
@@ -103,7 +123,7 @@ def nodes(mock_serial_port):
     executor_thread.start()
 
     yield {
-        "mock_serial_port": mock_serial_port,
+        "mock_serial_port": firmware_node.firmware_serial_port,
         "test_node": test_node,
         "firmware_node": firmware_node,
         "executor": executor,
