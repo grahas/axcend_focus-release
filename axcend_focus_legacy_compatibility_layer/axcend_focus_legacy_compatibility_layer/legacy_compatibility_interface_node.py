@@ -25,12 +25,12 @@ class LegacyCompatibilityInterface(Node):
 
         # Create a publisher for the firmware_UART_write topic
         self.firmware_UART_write_publisher = self.create_publisher(
-            String, "firmware_UART_write", 10
+            String, "firmware_UART_write", 128
         )
 
         # Create a subscriber for the firmware_UART_read topic
         self.firmware_UART_read_subscription = self.create_subscription(
-            String, "firmware_UART_read", self.firmware_UART_read_callback, 10
+            String, "firmware_UART_read", self.firmware_UART_read_callback, 128
         )
 
         # Create a client for the cartridge_memory_read_write service
@@ -45,15 +45,22 @@ class LegacyCompatibilityInterface(Node):
 
         # Create a subscriber for the pump status topic
         self.pump_status_subscription = self.create_subscription(
-            PumpStatus, "pump_status", self.pump_status_callback, 10
+            PumpStatus, "pump_status", self.pump_status_callback, 128
         )
         self.pump_status_cache = PumpStatus()
 
     def firmware_UART_read_callback(self, msg):
         """Callback function for the firmware_bridge TX topic."""
         # Remove the proto1 prefix
-        msg.data = msg.data.split("proto1 ")[1]
-        self.read_queue.put(msg.data)
+        try:
+            if msg.data.startswith("proto1 "):
+                msg.data = msg.data.split("proto1 ")[1]
+                self.read_queue.put(msg.data)
+            elif msg.data.startswith("cartridge_config "):
+                msg.data = msg.data.split("cartridge_config ")[1]
+                # Don't need to do anything with the raw packet since we are getting it though the service call
+        except IndexError:
+            self.get_logger().error(f"Error parsing message: {msg.data}")
 
     def publish_to_firmware_UART_write_thread(self):
         """Publish messages from the queue to the firmware_UART_write topic."""
@@ -61,6 +68,7 @@ class LegacyCompatibilityInterface(Node):
             try:
                 msg = self.write_queue.get(timeout=0.5)
                 self.firmware_UART_write_publisher.publish(msg)
+                print("Sending message to firmware: ", msg.data)
             except Empty:
                 continue
 

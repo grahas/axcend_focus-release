@@ -1,0 +1,10 @@
+<?xml version="1.0" standalone='no'?>
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+<service-group>
+  <name replace-wildcards="yes">%h.axcend.bridge</name>
+  <service>
+    <type>_http._tcp</type>
+    <subtype>axcend</subtype>
+    <port>8000</port>
+  </service>
+</service-group>

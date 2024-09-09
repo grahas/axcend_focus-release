@@ -5,15 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Test Firmware Manager",
+            "name": "Python: Test Firmware Bridge",
             "type": "debugpy",
             "request": "launch",
             "module": "pytest",
             "cwd": "${workspaceFolder}",
             "args": [
-                "-s", "axcend_focus_ros2_firmware_bridge/test/test_firmware_manager.py"
+                "-s",
+                "axcend_focus_ros2_firmware_bridge/test/test_firmware_bridge.py"
             ],
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "env": {
+                "LD_LIBRARY_PATH": "${workspaceFolder}/axcend_focus_ros2_firmware_bridge/axcend_focus_ros2_firmware_bridge:${env:LD_LIBRARY_PATH}"
+            },
         },
         {
             "name": "Python: Test Legacy Compatability Interface",
@@ -22,9 +26,25 @@
             "module": "pytest",
             "cwd": "${workspaceFolder}",
             "args": [
-                "-s", "axcend_focus_legacy_compatibility_layer/test/test_legacy_compatability_interface.py"
+                "-s",
+                "axcend_focus_legacy_compatibility_layer/test/test_legacy_compatability_interface.py"
             ],
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Test Packet Defintions",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "-s",
+                "axcend_focus_ros2_firmware_bridge/test/test_packet_definitions.py"
+            ],
+            "console": "integratedTerminal",
+            "env": {
+                "LD_LIBRARY_PATH": "${workspaceFolder}/axcend_focus_ros2_firmware_bridge/axcend_focus_ros2_firmware_bridge:${env:LD_LIBRARY_PATH}"
+            },
         },
         {
             "name": "Python Debugger: Current File",
@@ -33,5 +53,20 @@
             "program": "${file}",
             "console": "integratedTerminal"
         },
+        {
+            "name": "Python Debugger: Attach",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "192.168.7.1",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}", // Maps C:\Users\user1\project1
+                    "remoteRoot": "." // To current working directory ~/project1
+                }
+            ]
+        }
     ]
 }
