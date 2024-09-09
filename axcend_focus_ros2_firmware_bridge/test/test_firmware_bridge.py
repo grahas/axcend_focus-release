@@ -16,11 +16,6 @@ import pytest
 import rclpy
 from axcend_focus_custom_interfaces.srv import CartridgeMemoryReadWrite
 from axcend_focus_ros2_firmware_bridge import packet_definitions
-from axcend_focus_ros2_firmware_bridge.firmware_bridge import (
-    DataAcquisitionState, FirmwareNode)
-from rclpy.node import Node
-from sensor_msgs.msg import Temperature
-from serial import SerialTimeoutException
 from std_msgs.msg import String
 
 import axcend_focus_ros2_firmware_bridge.packet_definitions as packet_definitions
@@ -29,27 +24,30 @@ from axcend_focus_test_utils_package.conftest import nodes, mock_serial_port
 # Create an instance of the PacketTranscoder
 packet_transcoder = packet_definitions.PacketTranscoder()
 
+
 def test_heart_beat(nodes):
     """Verify that the firmware is able to respond to the heartbeat packet."""
     # Unpack the test objects from the fixture
-    serial_port = nodes['mock_serial_port']
-    firmware_node = nodes['firmware_node']
-    
+    serial_port = nodes["mock_serial_port"]
+    firmware_node = nodes["firmware_node"]
+
     # Insert a packet into the read buffer
-    serial_port.add_to_read_buffer(packet_transcoder.create_heartbeat_packet().encode())
+    serial_port.add_to_read_buffer(packet_transcoder.create_heartbeat_packet())
     time.sleep(1)
-    assert (time.time() - firmware_node.last_heartbeat_time) < firmware_node.heartbeat_timeout
+    assert (
+        time.time() - firmware_node.last_heartbeat_time
+    ) < firmware_node.heartbeat_timeout
 
 
 def test_firmware_UART_write_topic(nodes):
     """Verify that the firmware is able to receive messages from firmware_UART_write topic."""
     # Unpack the test objects from the fixture
-    serial_port = nodes['mock_serial_port']
-    test_node = nodes['test_node']
+    serial_port = nodes["mock_serial_port"]
+    test_node = nodes["test_node"]
 
     # Publish a message to the serial port TX topic
     msg = String()
-    msg.data = packet_transcoder.create_heartbeat_packet()
+    msg.data = packet_transcoder.create_heartbeat_packet().decode("UTF-8")
     test_node.firmware_UART_write_publisher.publish(msg)
 
     # Wait for the message to be processed
@@ -62,11 +60,13 @@ def test_firmware_UART_write_topic(nodes):
 def test_cartridge_memory_read_write(nodes):
     """Verify that the firmware is able to read and write to the cartridge memory."""
     # Unpack the test objects from the fixture
-    serial_port = nodes['mock_serial_port']
-    test_node = nodes['test_node']
+    serial_port = nodes["mock_serial_port"]
+    test_node = nodes["test_node"]
 
     # Create a mock cartridge memory packet to place in the read queue
-    cartridge_config_packet = packet_transcoder.create_cartridge_memory_write_packet({"version": 3})
+    cartridge_config_packet = packet_transcoder.create_cartridge_memory_write_packet(
+        {"version": 3, "serial_number": "ABC!#&def456"},
+    )
     serial_port.add_to_read_buffer(cartridge_config_packet)
 
     # Give time for read buffer to process
@@ -80,13 +80,16 @@ def test_cartridge_memory_read_write(nodes):
 
     # Check that we have the correct response
     assert results.version == 3
+    
+    # Check that the serial number was written correctly
+    assert results.serial_number == "ABC!#&def456"
 
 
 def test_pump_status(nodes):
     """Verify that the firmware is able to send the pump status."""
     # Unpack the test objects from the fixture
-    serial_port = nodes['mock_serial_port']
-    test_node = nodes['test_node']
+    serial_port = nodes["mock_serial_port"]
+    test_node = nodes["test_node"]
 
     # Create a mock pump status packet to place in the read queue
     phase = 1
@@ -101,6 +104,59 @@ def test_pump_status(nodes):
     # Check that the pump status was received
     assert test_node.pump_status_cache.phase == phase
 
+
+def test_handle_cartridge_oven_status_packet(nodes):
+    """Verify that the firmware is able to handle the cartridge oven status packet."""
+    # Unpack the test objects from the fixture
+    serial_port = nodes["mock_serial_port"]
+    test_node = nodes["test_node"]
+
+    # Create a mock cartridge oven status packet to place in the read queue
+    oven_status_packet = packet_transcoder.create_cartridge_oven_status_packet(
+        sequence_number = 1,
+        oven_state = 1,
+        temperature = int(40.15 * 100),
+        power_output = 0,
+        set_point = int(45.0 * 100),
+    )
+
+    # Add the cartridge oven status packet to the read buffer
+    serial_port.add_to_read_buffer(oven_status_packet)
+
+    # Give time for read buffer to process
+    time.sleep(2)
+
+    # Check that the cartridge oven status was received
+    epsilon = 0.0001  # threshold for comparing floating point numbers
+    assert abs(test_node.cartridge_oven_status_cache.current_temperature - 40.15) < epsilon
+    assert abs(test_node.cartridge_oven_status_cache.target_temperature - 45.0) < epsilon
+    assert test_node.cartridge_oven_status_cache.oven_state is True
+
+def test_firmware_serial_port_error_handling(nodes):
+    """Verify that the firmware is able to handle an error."""
+    # Unpack the test objects from the fixture
+    serial_port = nodes["mock_serial_port"]
+    firmware_node = nodes["firmware_node"]
+
+    # Simulate a error
+    serial_port.error()
+
+    # Wait for the node to handle the error
+    time.sleep(3)
+
+    # Check that the firmware is in the connected state
+    assert firmware_node.firmware_serial_port_status_ok is True
+
+def test_front_panel_button_callback(nodes):
+    """Verify that the firmware is able to handle the front panel button callback."""
+    # Unpack the test objects from the fixture
+    serial_port = nodes["mock_serial_port"]
+    firmware_node = nodes["firmware_node"]
+
+    # Create a mock front panel button packet to place in the read queue
+    msg = String()
+    msg.data = "short press detected"
+    firmware_node.front_panel_button_callback(msg)
 
 
 
@@ -660,7 +716,7 @@ def test_pump_status(nodes):
 #             ctypes.memmove(ctypes.byref(packet.raw), hex_bytes, len(hex_bytes))
 
 #             # Check if the packet is a temperature data packet
-#             if packet.field.packet_ID == ord("D") and packet.field.type_ID == ord("T"):
+#             if packet.fields.packet_ID == ord("D") and packet.fields.type_ID == ord("T"):
 
 #                 # Decode the packet
 #                 sequence_number = ctypes.c_uint32(0)

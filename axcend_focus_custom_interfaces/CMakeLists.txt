@@ -18,11 +18,13 @@ set(msg_files
   "msg/CartridgeOvenStatus.msg"
   "msg/PumpStatus.msg"
   "msg/ValveStatus.msg"
-
+  "msg/PumpControlMode.msg"
+  "msg/MethodInjectionType.msg"
 )
 
 set(action_files
     "action/CartridgeOvenPreheat.action"
+    "action/Method.action"
     "action/Pump.action"
     "action/PumpMove.action"
     "action/PumpPositioning.action"
