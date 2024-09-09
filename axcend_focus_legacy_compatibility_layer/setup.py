@@ -4,12 +4,13 @@ package_name = 'axcend_focus_legacy_compatibility_layer'
 
 setup(
     name=package_name,
-    version='3.1.4',
+    version='3.1.5',
     packages=[package_name],
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        ('share/' + package_name, ['resource/bridge.service']),
     ],
     install_requires=['setuptools', 'flask', 'flask_cors', 'rclpy', 'std_msgs'],
     zip_safe=True,

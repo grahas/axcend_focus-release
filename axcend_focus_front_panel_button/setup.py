@@ -4,7 +4,7 @@ package_name = 'axcend_focus_front_panel_button'
 
 setup(
     name=package_name,
-    version='3.1.4',
+    version='3.1.5',
     packages=[package_name],
     data_files=[
         ('share/ament_index/resource_index/packages',

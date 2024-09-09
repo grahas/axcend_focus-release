@@ -12,7 +12,7 @@ from axcend_focus_legacy_compatibility_layer.legacy_compatibility_interface impo
 from axcend_focus_legacy_compatibility_layer.legacy_compatibility_interface_node import (
     LegacyCompatibilityInterface,
 )
-from axcend_focus_test_utils_package.conftest import mock_serial_port, nodes
+from axcend_focus_test_utils_package.conftest import nodes
 
 # Create an instance of the PacketTranscoder
 packet_transcoder = packet_definitions.PacketTranscoder()
