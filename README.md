@@ -21,6 +21,18 @@ source install/setup.bash
 3. cd /mnt/c/Users/gupyf/Documents/GitHub/ros2_ws/src/axcend_focus
 4. code .
 
+### Dependencies
+The code has a dependency that the libaxcend_packet.so is availible on the shared library search path. The library can be compiled by running the make command in the firmware repo and then you can add it to your system. 
+
+### Open the IDE
+This is so that the vscode enviroment process is forked with the correct enviroment variables for the ROS2 workspace and will pass 
+it on to any tests or other processes so that intelisense and other stuff works correctly
+Open Ubuntu WSL terminal
+cd /mnt/c/Users/gupyf/Documents/GitHub/ros2_ws
+source install/setup.bash
+cd src/axcend_focus
+code .
+
 ### Build Package
 1. cd /mnt/c/Users/gupyf/Documents/GitHub/ros2_ws
 2. colcon build --packages-select axcend_focus_custom_interfaces
@@ -36,6 +48,12 @@ source install/setup.bash
 3. catkin_prepare_release
 4. bloom-release --rosdistro foxy axcend_focus
 5. https://github.com/grahas/axcend_focus-release.git
+6. y
+7. y
+8. n
+9. n
+10. n
+11. n
 
 https://github.com/grahas/axcend_focus.git
 
@@ -155,6 +173,7 @@ export ENVIRONMENT=development
 export ENVIRONMENT=production
 ros2 launch axcend_focus_launch application_launch.py
 ros2 run axcend_focus_ros2_firmware_bridge firmware_bridge.py
+ros2 run axcend_focus_front_panel_button front_panel_button_controller.py
 
 # Openinging the workspace
 open from the axcend_focus directory that has all the packages as the root of the workspace.
@@ -165,14 +184,16 @@ code .
 This will make all the paths work
 
 # Copy changes to the board
-scp -o StrictHostKeyChecking=no -r /mnt/c/Users/gupyf/Documents/GitHub/ros2_ws/install root@192.168.7.1:/tmp
-source /tmp/install/setup.bash
 
 scp -o StrictHostKeyChecking=no /mnt/c/Users/gupyf/Documents/GitHub/ros2_ws/src/axcend_focus/axcend_focus_ros2_firmware_bridge/axcend_focus_ros2_firmware_bridge/packet_definitions.py root@192.168.7.1:/usr/lib/python3.10/site-packages/axcend_focus_ros2_firmware_bridge/packet_definitions.py
 
-scp -o StrictHostKeyChecking=no  /mnt/c/Users/gupyf/Documents/GitHub/ros2_ws/src/axcend_focus/axcend_focus_legacy_compatibility_layer/axcend_focus_legacy_compatibility_layer/legacy_compatibility_interface.py root@192.168.7.1:/usr/lib/python3.10/site-packages/axcend_focus_legacy_compatibility_layer/legacy_compatibility_interface.py
+scp -o StrictHostKeyChecking=no /mnt/c/Users/gupyf/Documents/GitHub/ros2_ws/src/axcend_focus/axcend_focus_legacy_compatibility_layer/axcend_focus_legacy_compatibility_layer/legacy_compatibility_interface.py root@192.168.7.1:/usr/lib/python3.10/site-packages/axcend_focus_legacy_compatibility_layer/legacy_compatibility_interface.py
 
-scp -o StrictHostKeyChecking=no  /mnt/c/Users/gupyf/Documents/GitHub/ros2_ws/src/axcend_focus/axcend_focus_ros2_firmware_bridge/axcend_focus_ros2_firmware_bridge/firmware_bridge.py root@192.168.7.1:/usr/lib/python3.10/site-packages/axcend_focus_ros2_firmware_bridge/firmware_bridge.py
+scp /mnt/c/Users/gupyf/Documents/GitHub/ros2_ws/src/axcend_focus/axcend_focus_legacy_compatibility_layer/axcend_focus_legacy_compatibility_layer/legacy_compatibility_interface_node.py root@192.168.7.1:/usr/lib/python3.10/site-packages/axcend_focus_legacy_compatibility_layer/legacy_compatibility_interface_node.py
+
+scp -o StrictHostKeyChecking=no /mnt/c/Users/gupyf/Documents/GitHub/ros2_ws/src/axcend_focus/axcend_focus_ros2_firmware_bridge/axcend_focus_ros2_firmware_bridge/firmware_bridge.py root@192.168.7.1:/usr/lib/python3.10/site-packages/axcend_focus_ros2_firmware_bridge/firmware_bridge.py
+
+scp -o StrictHostKeyChecking=no /mnt/c/Users/gupyf/Documents/GitHub/ros2_ws/src/axcend_focus/axcend_focus_front_panel_button/axcend_focus_front_panel_button/front_panel_button_controller.py root@192.168.7.1:/home/root/front_panel_button_controller.py
 
 
 
@@ -224,3 +245,28 @@ while true; do
         tc class change dev $INTERFACE parent 1:1 classid 1:11 htb rate $SPEED_LOW
     fi
 done
+
+## ROS2 commands
+Fill / Empty to a specific location
+This will fill pumps to 70uL
+ros2 action send_goal /position_pumps axcend_focus_custom_interfaces/action/PumpPositioning "{volume: [70, 70]}"
+
+List all the running nodes
+ros2 node list
+
+Show all avalible actions
+ros2 action list
+
+Move the valves to fill - load
+ros2 action send_goal /rotate_valves axcend_focus_custom_interfaces/action/ValveRotate "{valve_position: [0, 1]}"
+
+Moves the valve to block - load
+ros2 action send_goal /rotate_valves axcend_focus_custom_interfaces/action/ValveRotate "{valve_position: [1, 1]}"
+
+Moves the valve to fill - inject
+ros2 action send_goal /rotate_valves axcend_focus_custom_interfaces/action/ValveRotate "{valve_position: [1, 0]}"
+
+Launch the rosbridge_server
+ros2 launch rosbridge_server rosbridge_websocket_launch.xml
+
+ros2 action send_goal /rotate_valves axcend_focus_custom_interfaces/action/ValveRotate "{valve_position: [1, 2]}"

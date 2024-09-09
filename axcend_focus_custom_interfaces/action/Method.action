@@ -1,2 +1,25 @@
 # Interface for running a method on the device
 
+# Gradient x and y should have the same length
+int32[] gradient_x # Measured in seconds
+int32[] gradient_y # Measured in percent composition of b pump
+
+# Pump settings
+PumpControlMode control_mode # Control mode: 0 for FLOW, 1 for PRESSURE
+float32 flow_rate # Measured in micro liters per minute
+float32 operating_pressure # Measured in psi, the staring pressure for the pump in flow mode and the target pressure in pressure mode
+
+# Oven controls
+bool oven_state # True for on, false for off
+float32 oven_temperature # Measured in degrees Celsius
+
+# Sample injection settings
+MethodInjectionType injection_type # 0 for NORMAL_INJECTION, 1 for TIMED_INJECTION, 2 for NO_INJECTION
+int32 injection_time # Measured in seconds, only used if injection_type is TIMED_INJECTION
+int32 injection_volume # Measured in nano liters, only used if injection_type is NORMAL_INJECTION
+
+# Equilibration settings
+int32 equilibration_time # Measured in seconds
+
+---
+---
