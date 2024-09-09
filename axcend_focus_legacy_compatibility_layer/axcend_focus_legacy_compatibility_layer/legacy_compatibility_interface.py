@@ -182,10 +182,8 @@ def read():
     while not system_state["firmware_UART_read_queue"].empty():
         results += system_state["firmware_UART_read_queue"].get()
 
-    # Prepend the proto1 prefix
-    if results != "":
-        results = "proto1 " + results
-
+    # Debug message for the results
+    print("Read: ", results)
     return generate_json_response("read", results)
 
 
@@ -200,11 +198,10 @@ def write():
     bytes_sent = 0
     if message is None:
         return generate_json_response("write", bytes_sent)
-    msg = String()
-    msg.data = message
 
     # Split the message into 32 character chunks and write them to the topic
     for i in range(0, len(message), 32):
+        msg = String()
         msg.data = message[i: i + 32]
         msg.data = "proto1 " + msg.data
         system_state["firmware_UART_write_queue"].put(msg)

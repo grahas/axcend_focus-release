@@ -45,5 +45,6 @@
         "${workspaceFolder}/axcend_focus_test_utils_package",
         "/opt/ros/humble/lib/python3.10/site-packages",
         "/opt/ros/humble/local/lib/python3.10/dist-packages"
-    ]
+    ],
+    "debugpy.debugJustMyCode": false
 }
