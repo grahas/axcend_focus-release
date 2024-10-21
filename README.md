@@ -42,14 +42,16 @@ code .
 1. catkin_generate_changelog
 2. Commit the files
 3. catkin_prepare_release
-4. bloom-release --rosdistro foxy axcend_focus
-5. https://github.com/grahas/axcend_focus-release.git
-6. y
-7. y
-8. n
-9. n
-10. n
+4. y
+5. y
+6. bloom-release --rosdistro foxy axcend_focus
+8. https://github.com/grahas/axcend_focus-release.git
+9. y
+10. y
 11. n
+12. n
+13. n
+14. n
 
 https://github.com/grahas/axcend_focus.git
 
@@ -70,7 +72,7 @@ In build-server VM ->
 
 In build-server VM ->
 0. In the same terminal as before
-1. superflore-gen-oe-recipes --dry-run --ros-distro foxy --only axcend_focus_custom_interfaces axcend_focus_front_panel_button axcend_focus_launch axcend_focus_legacy_compatibility_layer axcend_focus_ros2_firmware_bridge axcend_focus_test_utils_package --output-repository-path ~/Documents/GitHub/test-meta-ros
+1. superflore-gen-oe-recipes --dry-run --ros-distro foxy --only axcend_focus_custom_interfaces axcend_focus_device_config axcend_focus_front_panel_button axcend_focus_launch axcend_focus_legacy_compatibility_layer axcend_focus_operation axcend_focus_ros2_firmware_bridge axcend_focus_test_utils_package --output-repository-path ~/Documents/GitHub/test-meta-ros
 
 
 ### Update Existing Recipe
