@@ -1,0 +1,50 @@
+{
+    "terminal.integrated.env.linux": {
+        "BASH_ENV": "${workspaceFolder}/../../install/setup.bash"
+    },
+    "terminal.integrated.env.osx": {
+        "BASH_ENV": "${workspaceFolder}/../../install/setup.bash"
+    },
+    "terminal.integrated.env.windows": {
+        "CMDER_START": "call ${workspaceFolder}\\..\\..\\install\\setup.bat"
+    },
+    "terminal.integrated.shellArgs.linux": [
+        "-i"
+    ],
+    "terminal.integrated.shellArgs.osx": [
+        "-i"
+    ],
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./src",
+        "-p",
+        "test_*.py"
+    ],
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestArgs": [
+        "axcend_focus_ros2_firmware_bridge"
+    ],
+    "python.autoComplete.extraPaths": [
+        "${workspaceFolder}/axcend_focus_ros2_firmware_bridge",
+        "${workspaceFolder}/axcend_focus_legacy_compatibility_layer",
+        "${workspaceFolder}/axcend_focus_front_panel_button",
+        "${workspaceFolder}/axcend_focus_custom_interfaces",
+        "${workspaceFolder}/axcend_focus_launch",
+        "${workspaceFolder}/axcend_focus_test_utils_package",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/axcend_focus_ros2_firmware_bridge",
+        "${workspaceFolder}/axcend_focus_legacy_compatibility_layer",
+        "${workspaceFolder}/axcend_focus_front_panel_button",
+        "${workspaceFolder}/axcend_focus_custom_interfaces",
+        "${workspaceFolder}/axcend_focus_launch",
+        "${workspaceFolder}/axcend_focus_test_utils_package",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ],
+    "debugpy.debugJustMyCode": false
+}
