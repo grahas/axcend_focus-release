@@ -1,0 +1,14 @@
+# Used for changing the solvents in the system and cleaning the pumps from previous solvent
+
+# Goal definition
+uint8 cycle # How many times to fill and empty the pumps, 0-255
+uint8 fill_volume # The volume to fill the pump to for each cycle in uL, 0 - pump max volume
+uint8 final_volume # The final volume of the pump in uL, 0 - pump max volume
+
+---
+# Results definition
+bool success # Goal completed successfully
+
+---
+# Feedback
+uint8 cycle # Current cycle
