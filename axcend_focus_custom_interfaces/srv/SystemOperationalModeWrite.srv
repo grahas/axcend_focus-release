@@ -1,0 +1,11 @@
+
+# Constants
+uint8 NORMAL_MODE = 0
+uint8 SERVICE_MODE = 1
+
+# Request message
+uint8 operational_mode
+
+---
+# Response message
+uint8 operational_mode
