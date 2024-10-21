@@ -5,6 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Test Operation Node",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "-s",
+                "axcend_focus_operation/test/test_operation.py"
+            ],
+            "console": "integratedTerminal",
+            "env": {
+                "LD_LIBRARY_PATH": "${workspaceFolder}/axcend_focus_ros2_firmware_bridge/axcend_focus_ros2_firmware_bridge:${env:LD_LIBRARY_PATH}"
+            },
+        },
+        {
             "name": "Python: Test Firmware Bridge",
             "type": "debugpy",
             "request": "launch",
