@@ -4,7 +4,7 @@ package_name = 'axcend_focus_operation'
 
 setup(
     name=package_name,
-    version='3.1.7',
+    version='3.1.8',
     packages=[package_name],
     data_files=[
         ('share/ament_index/resource_index/packages',
