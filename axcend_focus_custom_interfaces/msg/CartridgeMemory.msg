@@ -1,0 +1,37 @@
+uint8 version
+uint8 revision
+string serial_number # Max 12 characters
+uint8 max_pressure_rating # In hundreds of PSI
+uint8 has_oven
+uint8 is_third_party
+string last_write_date # Max 6 characters
+uint32 total_run_time
+uint8 cartridge_flags
+uint8 detector_count
+uint8 detector_1_type
+uint16 detector_1_wavelength
+uint16 detector_1_path_length
+uint8 detector_2_type
+uint16 detector_2_wavelength
+uint16 detector_2_path_length
+uint8 column_count
+uint8 column_1_length
+uint16 column_1_diameter
+uint8 column_1_particle_size
+string column_1_description # Max 12 characters
+uint8 column_2_length
+uint16 column_2_diameter
+uint8 column_2_particle_size
+string column_2_description # Max 12 characters
+uint8 detector_1_adc_gain
+uint8 detector_1_adc_delay
+uint8 detector_1_led_pot
+uint8 detector_2_adc_gain
+uint8 detector_2_adc_delay
+uint8 detector_2_led_pot
+uint8 bluetooth_disabled
+uint8 report_rate
+uint8 word_rate
+uint8 unused
+uint8 samples_per_point
+uint8 bits_to_remove
