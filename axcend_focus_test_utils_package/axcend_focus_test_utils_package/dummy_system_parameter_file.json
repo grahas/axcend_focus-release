@@ -1,0 +1,310 @@
+{
+    "version": "3",
+    "hardwareVersion": "1",
+    "valvePumpCtlType": "0",
+    "backPlateBoardType": "0",
+    "boardSerialNumber": "5",
+    "productionDate": "52688",
+    "productionLocation": "43",
+    "maxPressureRating": "6000",
+    "pressureSensorType": "0",
+    "valveSolType": "0",
+    "valveInjType": "0",
+    "valvePrgType": "0",
+    "pumpSyringeAEmptyValue": "1500",
+    "pumpSyringeAFullValue": "7200",
+    "pumpSyringeBEmptyValue": "1500",
+    "pumpSyringeBFullValue": "7500",
+    "pumpLifetimeUsage": "0",
+    "injectionVolume": "40",
+    "pumpSyringesType": "1",
+    "pumpSyringeAVolume": "140",
+    "pumpSyringeBVolume": "140",
+    "OutputEvents": [
+        {
+            "Pins": [
+                {
+                    "Pin": 0,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 1,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 2,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 3,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 4,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 5,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 6,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 7,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                }
+            ],
+            "PulseTimer": 0,
+            "ExecuteTimer": 0,
+            "IOType": {
+                "Phase": 0
+            }
+        },
+        {
+            "Pins": [
+                {
+                    "Pin": 0,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 1,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 2,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 3,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 4,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 5,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 6,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 7,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                }
+            ],
+            "PulseTimer": 0,
+            "ExecuteTimer": 0,
+            "IOType": {
+                "Phase": 1
+            }
+        },
+        {
+            "Pins": [
+                {
+                    "Pin": 0,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 1,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 2,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 3,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 4,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 5,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 6,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 7,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                }
+            ],
+            "PulseTimer": 0,
+            "ExecuteTimer": 0,
+            "IOType": {
+                "Phase": 2
+            }
+        },
+        {
+            "Pins": [
+                {
+                    "Pin": 0,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 1,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 2,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 3,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 4,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 5,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 6,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 7,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                }
+            ],
+            "PulseTimer": 0,
+            "ExecuteTimer": 0,
+            "IOType": {
+                "Phase": 3
+            }
+        },
+        {
+            "Pins": [
+                {
+                    "Pin": 0,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 1,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 2,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 3,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 4,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 5,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 6,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                },
+                {
+                    "Pin": 7,
+                    "PulseCount": 0,
+                    "Type": 0,
+                    "Active": 0
+                }
+            ],
+            "PulseTimer": 0,
+            "ExecuteTimer": 0,
+            "IOType": {
+                "Phase": 4
+            }
+        }
+    ]
+}
