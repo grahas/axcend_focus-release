@@ -1,0 +1,9 @@
+#Goal
+float32 target_temperature
+---
+#Result
+bool is_at_target_temperature
+---
+#Feedback
+float32 current_temperature
+float32 heater_element_power_output
