@@ -4,12 +4,14 @@ package_name = 'axcend_focus_device_config'
 
 setup(
     name=package_name,
-    version='3.1.6',
+    version='3.1.7',
     packages=[package_name],
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        ('share/' + package_name, ['system_parameter_template.json']),
+        ('share/' + package_name, ['config.yaml']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
