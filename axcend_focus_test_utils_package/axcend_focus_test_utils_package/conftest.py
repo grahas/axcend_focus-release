@@ -20,22 +20,6 @@ from axcend_focus_ros2_firmware_bridge.firmware_bridge import (
 )
 from axcend_focus_test_utils_package.mock_serial_port import mock_serial_port
 
-# Get the current directory
-current_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Define the relative path to the JSON file
-relative_path = "dummy_system_parameter_file.json"
-
-# Join the current directory with the relative path
-json_file_path = os.path.join(current_dir, relative_path)
-
-# Set the SYS_PARAMS_FILE environment variable
-os.environ["SYS_PARAMS_FILE"] = json_file_path
-
-# Set the ENVIRONMENT environment variable
-os.environ["ENVIRONMENT"] = "development"
-
-
 class ExampleNode(Node):
     """Node is for use of the firmware test script."""
 
