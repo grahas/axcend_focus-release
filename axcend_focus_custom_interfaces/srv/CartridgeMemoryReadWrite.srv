@@ -1,7 +1,0 @@
-# Request
-string command # Set to "read" or "write"
-CartridgeMemory cartridge_memory # Blank if command is "read", populated if command is "write"
----
-# Response
-# Populate with necessary data as per use-case
-CartridgeMemory cartridge_memory
