@@ -1,0 +1,13 @@
+[Unit]
+Description=Launch ROS 2 Node
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/bin/bash -c 'source /usr/bin/ros_setup.bash; source /etc/profile.d/axcend_profile.sh; ros2 launch axcend_focus_launch application_launch.py;'
+Restart=on-failure
+Environment="RMW_IMPLEMENTATION=rmw_fastrtps_cpp"
+
+[Install]
+WantedBy=multi-user.target
