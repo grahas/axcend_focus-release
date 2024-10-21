@@ -1,9 +1,9 @@
 import json
 import os
 import yaml
-
-system_parameters_file_path = os.environ.get("SYS_PARAMS_FILE")
-config_file_path = os.environ.get("CONFIG_FILE_PATH")
+import pkg_resources
+config_file_path = pkg_resources.resource_filename('axcend_focus_device_config', 'config.yaml')
+system_parameters_file_path = pkg_resources.resource_filename('axcend_focus_device_config', 'system_parameter_template.json')
 
 def get_config() -> dict:
     """Read the config.yaml file."""
