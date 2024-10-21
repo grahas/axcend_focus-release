@@ -6,7 +6,7 @@ package_name = "axcend_focus_launch"
 
 setup(
     name=package_name,
-    version="3.1.5",
+    version="3.1.6",
     packages=[package_name],
     data_files=[
         ("share/ament_index/resource_index/packages", ["resource/" + package_name]),
@@ -14,6 +14,10 @@ setup(
         (
             os.path.join("share", package_name, "launch"),
             glob(os.path.join("launch", "*launch.[pxy][yma]*")),
+        ),
+        (
+            os.path.join("share", package_name, "launch"),
+            ["launch/application_launch.service"],
         ),
     ],
     install_requires=["setuptools"],

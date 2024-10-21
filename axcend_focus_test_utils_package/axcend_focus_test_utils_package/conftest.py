@@ -6,12 +6,14 @@ from threading import Thread
 
 import pytest
 import rclpy
+from rclpy.action import ActionClient
 from rclpy.node import Node
 from sensor_msgs.msg import Temperature
 from std_msgs.msg import String, Header
 
 from axcend_focus_custom_interfaces.msg import PumpStatus, CartridgeOvenStatus
 from axcend_focus_custom_interfaces.srv import CartridgeMemoryReadWrite
+from axcend_focus_custom_interfaces.action import Method
 from axcend_focus_ros2_firmware_bridge.firmware_bridge import (
     DataAcquisitionState,
     FirmwareNode,
@@ -49,6 +51,9 @@ class ExampleNode(Node):
         self.cartridge_memory_read_write_client = self.create_client(
             CartridgeMemoryReadWrite, "cartridge_memory_read_write"
         )
+
+        # Create action client for the method action
+        self.method_action_client = ActionClient(self, Method, 'method_action')
 
         # Create a publisher to write to the firmware_UART_write string topic
         self.firmware_UART_write_publisher = self.create_publisher(

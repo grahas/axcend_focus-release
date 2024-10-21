@@ -6,10 +6,36 @@ import os
 import json
 from ctypes.util import find_library
 from typing import Dict
+from axcend_focus_device_config import device_config
 
 PACKET_MAX_LENGTH = 16  # bytes
 
 PROTO_PREFIX = b"proto1 "
+
+# Used with the pump set command
+class PumpSet():
+    """Responsible for defining the pump set commands."""
+    TARGET_PRESSURE_COMMAND = 4
+    FLOW_RATE_COMMAND = 6 # For the flow rate
+    DIRECTION_COMMAND = 8 # For the direction, 1 is dispense, 0 is aspirate
+    DIRECTION_DISPENSE = 0
+    DIRECTION_FILL = 1
+    CONTROL_MODE_COMMAND = 10 # For the control mode, 0 is pressure, 1 is disposition
+    CONTROL_MODE_FLOW = 0
+    CONTROL_MODE_PRESSURE = 1
+
+class PumpCommand():
+    """Responsible for defining the pump commands."""
+    PUMP_IDLE = 0
+    PUMP_FILL = 1
+    PUMP_DISPENSE = 2
+    PUMP_ASPIRATE = 3
+    PUMP_STOP = 4
+
+class AcknowledgementChannelID(Enum):
+    """Enum is responsible for defining the acknowledgement channel IDs."""
+    COMMAND = 0
+    METHOD = 1
 
 class AbortPacketReasons:
     """Enum is responsible for defining the abort packet reasons."""
@@ -256,6 +282,28 @@ class PacketTranscoder:
         ]
         packet_transcoder.packetEncode_8_32.restype = ctypes.c_int
 
+        packet_transcoder.packetEncode_16_8_32.argtypes = [
+            ctypes.c_uint8,
+            ctypes.c_uint8,
+            ctypes.POINTER(Packet),
+            ctypes.c_uint16,
+            ctypes.c_uint8,
+            ctypes.c_uint32,
+        ]
+        packet_transcoder.packetEncode_16_8_32.restype = ctypes.c_int
+
+        packet_transcoder.packetEncode_8_all.argtypes = [
+            ctypes.POINTER(Packet),
+            ctypes.c_uint8,
+            ctypes.c_uint8,
+            ctypes.c_uint8,
+            ctypes.c_uint8,
+            ctypes.c_uint8,
+            ctypes.POINTER(ctypes.c_uint8),
+            ctypes.c_uint8,
+        ]
+        packet_transcoder.packetEncode_8_all.restype = ctypes.c_int
+
         packet_transcoder.packetDecode_oven_data.argtypes = [
             ctypes.POINTER(Packet),
             ctypes.POINTER(ctypes.c_uint32),
@@ -284,7 +332,7 @@ class PacketTranscoder:
         """Return the encoded heart beat packet."""
         packet = Packet()
 
-        # Make an OK packet
+        # Make a packet
         packet_ID = ctypes.c_uint8(ord("G"))
         type_ID = ctypes.c_uint8(ord("H"))
         self.packet_transcoder.packetEncode_0(packet_ID, type_ID, ctypes.byref(packet))
@@ -295,11 +343,11 @@ class PacketTranscoder:
 
     def create_acknowledgement_packet(self) -> bytes:
         """Create a default acknowledgement packet hex encoded string."""
-        ACK_VALUE = b"OK"
+        ACK_VALUE = b"ACK"
 
         packet = Packet()
 
-        # Make an OK packet
+        # Make a packet
         packet_ID = ctypes.c_uint8(ord("D"))
         type_ID = ctypes.c_uint8(ord("A"))
         buf = ctypes.create_string_buffer(ACK_VALUE, len(ACK_VALUE))
@@ -314,11 +362,7 @@ class PacketTranscoder:
     def create_system_parameters_packet(self) -> bytes:
         """Make the system parameters packet."""
         # Variables
-        system_parameters_file_path = os.environ.get("SYS_PARAMS_FILE")
-
-        # Open the file and load the JSON object
-        with open(system_parameters_file_path, "r") as f:
-            data = json.load(f)
+        data = device_config.system_parameter_read_all()
 
         # Create an instance of the SystemParameters_t union
         params = SystemParameters_t()
@@ -475,6 +519,102 @@ class PacketTranscoder:
         packet_string = PROTO_PREFIX + bytes(packet.raw).hex().upper().encode()
         return packet_string
 
+    def create_pump_pressurize_system_packet(self, target_pressure: int):
+        """Create a pump load packet."""
+        packet = Packet()
+
+        # Encode the packet
+        self.packet_transcoder.packetEncode_8_all(
+            ctypes.byref(packet), 
+            ctypes.c_uint8(ord("C")), 
+            ctypes.c_uint8(ord("L")),
+            ctypes.c_int8(target_pressure / 100),
+            ctypes.c_int8(target_pressure / 100),
+            ctypes.c_int8(0),
+            (ctypes.c_uint8 * 8)(0, 0, 0, 0, 0, 0, 0, 0),
+            ctypes.c_uint8(8),
+        )
+
+        # Serialize the packet into a hex encoded string
+        packet_string = PROTO_PREFIX + bytes(packet.raw).hex().upper().encode()
+        return packet_string
+
+    def create_pump_set_packet(self, address_to_set: int, value_to_set: int) -> bytes:
+        """Create a pump set packet."""
+        packet = Packet()
+
+        # Encode the packet
+        # Call packetEncode_16_16_b
+        self.packet_transcoder.packetEncode_16_8_32(
+            ctypes.c_uint8(ord("C")),
+            ctypes.c_uint8(ord("C")),
+            ctypes.byref(packet),
+            ctypes.c_uint16(address_to_set),
+            ctypes.c_uint8(4), # 4 is the number of bytes to set
+            ctypes.c_uint32(value_to_set),
+        )
+
+        # Serialize the packet into a hex encoded string
+        packet_string = PROTO_PREFIX + bytes(packet.raw).hex().upper().encode()
+        return packet_string
+
+    def create_pump_packet(self, time_in_seconds, start_ratio, end_ratio, control_mode):
+        """Encode the packet with the given time, start_ratio, end_ratio, and flags."""
+        PUMP_FLAGS_TIME_SCALE_FACTOR_BIT_POSITION = 0x01
+        PUMP_FLAGS_TIME_SCALE_FACTOR_BIT_MASK = 0x3
+        PUMP_FLAGS_TIME_SCALE_FACTOR_1000_MS = 0x00
+        PUMP_FLAGS_TIME_SCALE_FACTOR_100_MS = 0x01
+        PUMP_FLAGS_TIME_SCALE_FACTOR_10_MS = 0x2
+        PUMP_FLAGS_TIME_SCALE_FACTOR_1_MS = 0x3
+        PUMP_FLAGS_CONTROL_MODE_BIT_POSITION = 0x4
+        PUMP_FLAGS_CONTROL_MODE_BIT_MASK = 0x1
+        PUMP_FLAGS_CONTROL_MODE_FLOW = 0x00
+        PUMP_FLAGS_CONTROL_MODE_PRESSURE = 0x01
+
+        def determine_time_scale_factor(time_in_seconds):
+            time_in_ms = time_in_seconds * 1000
+            if time_in_ms <= 0xFFFF:
+                return PUMP_FLAGS_TIME_SCALE_FACTOR_1_MS, int(time_in_ms)
+            
+            time_in_10ms = time_in_seconds * 100
+            if time_in_10ms <= 0xFFFF:
+                return PUMP_FLAGS_TIME_SCALE_FACTOR_10_MS, int(time_in_10ms)
+            
+            time_in_100ms = time_in_seconds * 10
+            if time_in_100ms <= 0xFFFF:
+                return PUMP_FLAGS_TIME_SCALE_FACTOR_100_MS, int(time_in_100ms)
+            
+            time_in_1000ms = time_in_seconds
+            if time_in_1000ms <= 0xFFFF:
+                return PUMP_FLAGS_TIME_SCALE_FACTOR_1000_MS, int(time_in_1000ms)
+            
+            raise ValueError("Time value is too large to be represented in 16 bits with any scale factor")
+                
+        def encode_pump_flags(time_scale_factor, control_mode):
+            flags = 0
+            flags |= (time_scale_factor & PUMP_FLAGS_TIME_SCALE_FACTOR_BIT_MASK) << PUMP_FLAGS_TIME_SCALE_FACTOR_BIT_POSITION
+            flags |= (control_mode & PUMP_FLAGS_CONTROL_MODE_BIT_MASK) << PUMP_FLAGS_CONTROL_MODE_BIT_POSITION
+            return flags
+
+        packet = Packet()
+        
+        time_scale_factor, time = determine_time_scale_factor(time_in_seconds)
+        
+        # Scale up values for 2 decimals of precision
+        start_ratio = int(start_ratio * 100)
+        end_ratio = int(end_ratio * 100)
+
+        packet.raw[2] = (time >> 0) & 0xFF
+        packet.raw[3] = (time >> 8) & 0xFF
+        packet.raw[4] = (end_ratio >> 0) & 0xFF
+        packet.raw[5] = (end_ratio >> 8) & 0xFF
+        packet.raw[6] = (start_ratio >> 0) & 0xFF
+        packet.raw[7] = (start_ratio >> 8) & 0xFF
+        
+        # Encode the flags
+        flags = encode_pump_flags(time_scale_factor, control_mode)
+        packet.raw[8] = (flags >> 0) & 0xFF
+
     def create_cartridge_memory_write_packet(self, cartridge_data: dict) -> bytes:
         """Create a cartridge memory write packet."""
         packet = CartridgeMemory_t()
@@ -530,11 +670,29 @@ class PacketTranscoder:
 
         return PROTO_PREFIX + bytes(packet.raw).hex().upper().encode()
 
+    def create_cartridge_oven_set_packet(self, oven_state: bool, oven_set_point: float) -> bytes:
+        """Create a packet to set the oven state and set point."""
+        # Create a blank packet
+        packet = Packet()
+
+        # Encode the packet
+        self.packet_transcoder.packetEncode_8_32(
+            ctypes.byref(packet),
+            ctypes.c_uint8(ord("C")),
+            ctypes.c_uint8(ord("T")),
+            ctypes.c_uint8(ord("S") if oven_state else ord("Q")),
+            ctypes.c_uint32(oven_set_point * 100),
+        )
+
+        # Serialize the packet into a hex encoded string
+        packet_string = PROTO_PREFIX + bytes(packet.raw).hex().upper().encode()
+        return packet_string
+    
     def create_dummy_pump_status_packet(self, phase) -> bytes:
         """Create a pump status packet."""
         packet = Packet()
 
-        # Make an OK packet
+        # Make a packet
         self.packet_transcoder.packetEncode_8_32(
             ctypes.byref(packet),
             ctypes.c_uint8(ord("D")),
@@ -565,7 +723,7 @@ class PacketTranscoder:
         # Return the packet object
         return packet
     
-    def create_cartridge_oven_status_packet(self, sequence_number, oven_state, temperature, power_output, set_point) -> str:
+    def create_dummy_cartridge_oven_status_packet(self, sequence_number, oven_state, temperature, power_output, set_point) -> str:
         """Create a cartridge oven status packet."""
         packet = Packet()
 
@@ -664,3 +822,15 @@ class PacketTranscoder:
         # Get the phase name from the mapping, default to "Unknown" if not found
         return phase_mapping.get(packet.fields.unitId, "Unknown")
 
+    def parse_ack_packet(self, packet: Packet) -> list:
+        """Parse the acknowledgement packet.
+        
+        Returns:
+            A list containing the channel ID and the status of the acknowledgement.
+            [channel_id, status]
+        """
+
+        # channel_id is the first byte in the data and the status is the second byte where (A)CK is success and (N)ACK is failure
+        channel_id = int(chr(packet.fields.data[0]))
+        status = packet.fields.data[1] == ord("A")
+        return [channel_id, status]

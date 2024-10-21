@@ -17,5 +17,15 @@ def generate_launch_description():
             package='axcend_focus_front_panel_button',
             executable='front_panel_button_controller',
             name='front_panel_button_controller',
+        ),
+        Node(
+            package='rosbridge_server',
+            executable='rosbridge_websocket',
+            name='rosbridge_websocket',
+        ),
+        Node(
+            package='rosapi',
+            executable='rosapi_node',
+            name='rosapi_node',
         )
     ])

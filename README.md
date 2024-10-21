@@ -1,15 +1,11 @@
 # Repository for ROS2 and Axcend Focus LC
 
-# VS code addons
-
-Use color blocks to see sections of related code
-
 ## Workflow for building ros2 package and getting them on the board
 
 ### Setup
 
 Open the Ubuntu WSL VM and build server VM
-
+cd /mnt/c/Users/gupyf/Documents/GitHub/ros2_ws
 source /opt/ros/humble/setup.bash
 
 source install/setup.bash
@@ -120,7 +116,10 @@ the axcend_focus prefix is for package organization on superflore
 ros2 pkg create --build-type ament_cmake --node-name firmware_bridge axcend_focus_ros2_firmware_bridge_cpp
 ros2 pkg create --build-type ament_python --node-name front_panel_button_controller axcend_focus_front_panel_button
 ros2 pkg create --build-type ament_python --node-name legacy_compatibility_interface axcend_focus_legacy_compatibility_layer
+ros2 pkg create --build-type ament_python --node-name system_data_logger axcend_focus_system_data_logger
 ros2 pkg create --build-type ament_python axcend_focus_launch
+ros2 pkg create --build-type ament_python --node-name device_config axcend_focus_device_config
+ros2 pkg create --build-type ament_python --node-name operation axcend_focus_operation
 
 ros2 pkg create --build-type ament_cmake --node-name my_node my_package
 
@@ -154,18 +153,19 @@ rosdep install --from-paths src --ignore-src --rosdistro humble -y
 test the legacy_compatibility_layer: 
 colcon test --packages-select axcend_focus_legacy_compatibility_layer --event-handlers console_direct+
 
-test the packet transcoder: 
+test the packet transcoder:    
 colcon test --packages-select axcend_focus_ros2_firmware_bridge --event-handlers console_direct+
 
 To test without rebuilding in ROS2 you can  use
 colcon build --symlink-install
 
 # Build a specific package
-colcon build --packages-select axcend_focus_ros2_firmware_bridge 
-colcon build --packages-select axcend_focus_custom_interfaces 
-colcon build --packages-select axcend_focus_legacy_compatibility_layer
-colcon build --packages-select axcend_focus_launch
+colcon build --packages-select axcend_focus_ros2_firmware_bridge --symlink-install
+colcon build --packages-select axcend_focus_custom_interfaces --symlink-install
+colcon build --packages-select axcend_focus_legacy_compatibility_layer --symlink-install
+colcon build --packages-select axcend_focus_launch --symlink-install
 colcon build --packages-select axcend_focus_test_utils --symlink-install
+colcon build --packages-select axcend_focus_device_config --symlink-install
 colcon build --symlink-install
 
 # Launch the nodes
@@ -249,7 +249,7 @@ done
 ## ROS2 commands
 Fill / Empty to a specific location
 This will fill pumps to 70uL
-ros2 action send_goal /position_pumps axcend_focus_custom_interfaces/action/PumpPositioning "{volume: [70, 70]}"
+ros2 action send_goal /pump_positioning axcend_focus_custom_interfaces/action/PumpPositioning "{volume: [70, 70]}"
 
 List all the running nodes
 ros2 node list
@@ -258,15 +258,23 @@ Show all avalible actions
 ros2 action list
 
 Move the valves to fill - load
-ros2 action send_goal /rotate_valves axcend_focus_custom_interfaces/action/ValveRotate "{valve_position: [0, 1]}"
+ros2 action send_goal /valve_rotate axcend_focus_custom_interfaces/action/ValveRotate "{valve_position: [0, 1]}"
 
 Moves the valve to block - load
-ros2 action send_goal /rotate_valves axcend_focus_custom_interfaces/action/ValveRotate "{valve_position: [1, 1]}"
+ros2 action send_goal /valve_rotate axcend_focus_custom_interfaces/action/ValveRotate "{valve_position: [1, 1]}"
 
 Moves the valve to fill - inject
-ros2 action send_goal /rotate_valves axcend_focus_custom_interfaces/action/ValveRotate "{valve_position: [1, 0]}"
+ros2 action send_goal /valve_rotate axcend_focus_custom_interfaces/action/ValveRotate "{valve_position: [1, 0]}"
 
 Launch the rosbridge_server
 ros2 launch rosbridge_server rosbridge_websocket_launch.xml
 
-ros2 action send_goal /rotate_valves axcend_focus_custom_interfaces/action/ValveRotate "{valve_position: [1, 2]}"
+ros2 action send_goal /valve_rotate axcend_focus_custom_interfaces/action/ValveRotate "{valve_position: [1, 2]}"
+
+ros2 launch axcend_focus_launch application_launch.py
+
+## 
+Set the board time from the local computer
+ssh root@192.168.7.1 "date --set=\"$(date -u '+%Y-%m-%d %H:%M:%S')\" && hwclock --systohc --utc"
+
+systemctl restart application_launch

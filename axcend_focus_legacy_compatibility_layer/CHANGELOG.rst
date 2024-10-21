@@ -2,6 +2,15 @@
 Changelog for package axcend_focus_legacy_compatibility_layer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.1.6 (2024-10-21)
+------------------
+* update changelog
+* updates
+* Contributors: Graham Harrison
+
+* updates
+* Contributors: Graham Harrison
+
 3.1.5 (2024-09-09)
 ------------------
 * Update changelog

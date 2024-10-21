@@ -1,25 +1,33 @@
 # Interface for running a method on the device
+# Goal definition
 
 # Gradient x and y should have the same length
 int32[] gradient_x # Measured in seconds
-int32[] gradient_y # Measured in percent composition of b pump
+float32[] gradient_y # Measured in percent composition of b pump, ie 5.5 = 5.5% b pump
 
 # Pump settings
-PumpControlMode control_mode # Control mode: 0 for FLOW, 1 for PRESSURE
+uint8 FLOW_MODE=0
+uint8 PRESSURE_MODE=1
+uint8 control_mode # Control mode: FLOW_MODE or PRESSURE_MODE
 float32 flow_rate # Measured in micro liters per minute
-float32 operating_pressure # Measured in psi, the staring pressure for the pump in flow mode and the target pressure in pressure mode
+int32 operating_pressure # Measured in psi, the staring pressure for the pump in flow mode and the target pressure in pressure mode
 
 # Oven controls
-bool oven_state # True for on, false for off
-float32 oven_temperature # Measured in degrees Celsius
+CartridgeOvenControl oven_control
 
 # Sample injection settings
-MethodInjectionType injection_type # 0 for NORMAL_INJECTION, 1 for TIMED_INJECTION, 2 for NO_INJECTION
+uint8 NORMAL_INJECTION=0 # Rotate and hold sample inline with the flow path
+uint8 TIMED_INJECTION=1 # Inject sample for a specified amount of time
+uint8 NO_INJECTION=2 # Do not inject sample
+uint8 injection_type # Use one of the following: NORMAL_INJECTION, TIMED_INJECTION, NO_INJECTION
 int32 injection_time # Measured in seconds, only used if injection_type is TIMED_INJECTION
-int32 injection_volume # Measured in nano liters, only used if injection_type is NORMAL_INJECTION
+int32 injection_volume # Measured in nano liters, only used if injection_type is TIMED_INJECTION, set to 0 if not used
 
 # Equilibration settings
 int32 equilibration_time # Measured in seconds
-
 ---
+# Results definition
+string result_file # Path to the result file
+bool success # True if the method was able to complete the action
 ---
+# Feedback
