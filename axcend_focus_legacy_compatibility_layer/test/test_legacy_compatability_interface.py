@@ -256,8 +256,8 @@ def test_cartridge_config(client, nodes_with_legacy):
     assert b"version" in response.data
 
 
-def test_device_config(client):
-    """Test the device_config route."""
+def test_deviceconfig(client):
+    """Test the deviceconfig route."""
     response = client.get("/RPC2/deviceconfig")
 
     # Check the response
