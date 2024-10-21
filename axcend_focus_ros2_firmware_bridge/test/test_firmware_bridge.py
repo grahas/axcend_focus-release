@@ -34,7 +34,7 @@ from axcend_focus_test_utils_package.conftest import nodes, mock_serial_port
 packet_transcoder = packet_definitions.PacketTranscoder()
 
 
-@pytest.mark.skip(reason="Not interesting right now")
+# @pytest.mark.skip(reason="Not interesting right now")
 def test_heart_beat(nodes):
     """Verify that the firmware is able to respond to the heartbeat packet."""
     # Unpack the test objects from the fixture
@@ -49,7 +49,7 @@ def test_heart_beat(nodes):
     ) < firmware_node.heartbeat_timeout
 
 
-@pytest.mark.skip(reason="Not interesting right now")
+# @pytest.mark.skip(reason="Not interesting right now")
 def test_firmware_UART_write_topic(nodes):
     """Verify that the firmware is able to receive messages from firmware_UART_write topic."""
     # Unpack the test objects from the fixture
@@ -68,7 +68,7 @@ def test_firmware_UART_write_topic(nodes):
     assert msg.data.encode() in serial_port.write_data
 
 
-@pytest.mark.skip(reason="Not interesting right now")
+# @pytest.mark.skip(reason="Not interesting right now")
 def test_cartridge_memory_read_write(nodes):
     """Verify that the firmware is able to read and write to the cartridge memory."""
     # Unpack the test objects from the fixture
@@ -85,7 +85,7 @@ def test_cartridge_memory_read_write(nodes):
     time.sleep(1)
 
     # Create a request to write to the cartridge memory
-    results = test_node.request_cartridge_memory()
+    results = test_node.request_cartridge_memory().cartridge_memory
 
     # Check that the write request was successful
     assert results is not None
@@ -97,7 +97,7 @@ def test_cartridge_memory_read_write(nodes):
     assert results.serial_number == "ABC!#&def456"
 
 
-@pytest.mark.skip(reason="Not interesting right now")
+# @pytest.mark.skip(reason="Not interesting right now")
 def test_pump_status(nodes):
     """Verify that the firmware is able to send the pump status."""
     # Unpack the test objects from the fixture
@@ -118,7 +118,7 @@ def test_pump_status(nodes):
     assert test_node.pump_status_cache.phase == phase
 
 
-@pytest.mark.skip(reason="Not interesting right now")
+# @pytest.mark.skip(reason="Not interesting right now")
 def test_handle_cartridge_oven_status_packet(nodes):
     """Verify that the firmware is able to handle the cartridge oven status packet."""
     # Unpack the test objects from the fixture
@@ -151,7 +151,7 @@ def test_handle_cartridge_oven_status_packet(nodes):
     assert test_node.cartridge_oven_status_cache.oven_state is True
 
 
-@pytest.mark.skip(reason="Not interesting right now")
+# @pytest.mark.skip(reason="Not interesting right now")
 def test_firmware_serial_port_error_handling(nodes):
     """Verify that the firmware is able to handle an error."""
     # Unpack the test objects from the fixture
@@ -168,7 +168,7 @@ def test_firmware_serial_port_error_handling(nodes):
     assert firmware_node.firmware_serial_port_status_ok is True
 
 
-@pytest.mark.skip(reason="Not interesting right now")
+# @pytest.mark.skip(reason="Not interesting right now")
 def test_front_panel_button_callback(nodes):
     """Verify that the firmware is able to handle the front panel button callback."""
     # Unpack the test objects from the fixture
