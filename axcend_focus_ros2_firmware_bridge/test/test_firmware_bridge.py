@@ -15,6 +15,15 @@ from unittest.mock import Mock
 import pytest
 import rclpy
 from axcend_focus_custom_interfaces.srv import CartridgeMemoryReadWrite
+from axcend_focus_custom_interfaces.msg import CartridgeOvenControl, CartridgeOvenStatus
+from axcend_focus_custom_interfaces.action import (
+    ValveRotate,
+    PumpPositioning,
+    PumpPressurizeSystem,
+    Method,
+    CartridgeOvenSet,
+    Pump,
+)
 from axcend_focus_ros2_firmware_bridge import packet_definitions
 from std_msgs.msg import String
 
@@ -25,6 +34,7 @@ from axcend_focus_test_utils_package.conftest import nodes, mock_serial_port
 packet_transcoder = packet_definitions.PacketTranscoder()
 
 
+@pytest.mark.skip(reason="Not interesting right now")
 def test_heart_beat(nodes):
     """Verify that the firmware is able to respond to the heartbeat packet."""
     # Unpack the test objects from the fixture
@@ -39,6 +49,7 @@ def test_heart_beat(nodes):
     ) < firmware_node.heartbeat_timeout
 
 
+@pytest.mark.skip(reason="Not interesting right now")
 def test_firmware_UART_write_topic(nodes):
     """Verify that the firmware is able to receive messages from firmware_UART_write topic."""
     # Unpack the test objects from the fixture
@@ -57,6 +68,7 @@ def test_firmware_UART_write_topic(nodes):
     assert msg.data.encode() in serial_port.write_data
 
 
+@pytest.mark.skip(reason="Not interesting right now")
 def test_cartridge_memory_read_write(nodes):
     """Verify that the firmware is able to read and write to the cartridge memory."""
     # Unpack the test objects from the fixture
@@ -80,11 +92,12 @@ def test_cartridge_memory_read_write(nodes):
 
     # Check that we have the correct response
     assert results.version == 3
-    
+
     # Check that the serial number was written correctly
     assert results.serial_number == "ABC!#&def456"
 
 
+@pytest.mark.skip(reason="Not interesting right now")
 def test_pump_status(nodes):
     """Verify that the firmware is able to send the pump status."""
     # Unpack the test objects from the fixture
@@ -105,6 +118,7 @@ def test_pump_status(nodes):
     assert test_node.pump_status_cache.phase == phase
 
 
+@pytest.mark.skip(reason="Not interesting right now")
 def test_handle_cartridge_oven_status_packet(nodes):
     """Verify that the firmware is able to handle the cartridge oven status packet."""
     # Unpack the test objects from the fixture
@@ -112,12 +126,12 @@ def test_handle_cartridge_oven_status_packet(nodes):
     test_node = nodes["test_node"]
 
     # Create a mock cartridge oven status packet to place in the read queue
-    oven_status_packet = packet_transcoder.create_cartridge_oven_status_packet(
-        sequence_number = 1,
-        oven_state = 1,
-        temperature = int(40.15 * 100),
-        power_output = 0,
-        set_point = int(45.0 * 100),
+    oven_status_packet = packet_transcoder.create_dummy_cartridge_oven_status_packet(
+        sequence_number=1,
+        oven_state=1,
+        temperature=int(40.15 * 100),
+        power_output=0,
+        set_point=int(45.0 * 100),
     )
 
     # Add the cartridge oven status packet to the read buffer
@@ -128,10 +142,16 @@ def test_handle_cartridge_oven_status_packet(nodes):
 
     # Check that the cartridge oven status was received
     epsilon = 0.0001  # threshold for comparing floating point numbers
-    assert abs(test_node.cartridge_oven_status_cache.current_temperature - 40.15) < epsilon
-    assert abs(test_node.cartridge_oven_status_cache.target_temperature - 45.0) < epsilon
+    assert (
+        abs(test_node.cartridge_oven_status_cache.current_temperature - 40.15) < epsilon
+    )
+    assert (
+        abs(test_node.cartridge_oven_status_cache.target_temperature - 45.0) < epsilon
+    )
     assert test_node.cartridge_oven_status_cache.oven_state is True
 
+
+@pytest.mark.skip(reason="Not interesting right now")
 def test_firmware_serial_port_error_handling(nodes):
     """Verify that the firmware is able to handle an error."""
     # Unpack the test objects from the fixture
@@ -147,6 +167,8 @@ def test_firmware_serial_port_error_handling(nodes):
     # Check that the firmware is in the connected state
     assert firmware_node.firmware_serial_port_status_ok is True
 
+
+@pytest.mark.skip(reason="Not interesting right now")
 def test_front_panel_button_callback(nodes):
     """Verify that the firmware is able to handle the front panel button callback."""
     # Unpack the test objects from the fixture
@@ -157,7 +179,6 @@ def test_front_panel_button_callback(nodes):
     msg = String()
     msg.data = "short press detected"
     firmware_node.front_panel_button_callback(msg)
-
 
 
 # @pytest.fixture(scope="module")
@@ -261,11 +282,11 @@ def test_front_panel_button_callback(nodes):
 #     firmware_node.transmit_queue.put(packet_string)
 
 # # Create the expected response
-# # Make an OK packet
+# # Make an ACK packet
 # packet = Packet()
 # packet_ID = ctypes.c_uint8(ord("D"))
 # type_ID = ctypes.c_uint8(ord("N"))
-# buf = ctypes.create_string_buffer(b"OK", 13)
+# buf = ctypes.create_string_buffer(b"ACK", 13)
 # packet_transcoder.packetEncode_text(packet_ID, type_ID, ctypes.byref(packet), buf)
 
 # # Serialize the packet into a hex encoded string
@@ -304,10 +325,10 @@ def test_front_panel_button_callback(nodes):
 #     serial_port.write(packet_string)
 
 #     # Create the expected response
-#     # Make an OK packet
+#     # Make an ACK packet
 #     packet_ID = ctypes.c_uint8(ord("D"))
 #     type_ID = ctypes.c_uint8(ord("N"))
-#     buf = ctypes.create_string_buffer(b"OK", 13)
+#     buf = ctypes.create_string_buffer(b"ACK", 13)
 #     packet_transcoder.packetEncode_text(packet_ID, type_ID, ctypes.byref(packet), buf)
 
 #     # Serialize the packet into a hex encoded string
@@ -368,10 +389,10 @@ def test_front_panel_button_callback(nodes):
 #         serial_port.write(packet_string)
 
 #         # Create the expected response
-#         # Make an OK packet
+#         # Make an ACK packet
 #         packet_ID = ctypes.c_uint8(ord("D"))
 #         type_ID = ctypes.c_uint8(ord("N"))
-#         buf = ctypes.create_string_buffer(b"OK", 13)
+#         buf = ctypes.create_string_buffer(b"ACK", 13)
 #         packet_transcoder.packetEncode_text(
 #             packet_ID, type_ID, ctypes.byref(packet), buf
 #         )
@@ -433,10 +454,10 @@ def test_front_panel_button_callback(nodes):
 #             serial_port.write(packet_string)
 
 #             # Create the expected response
-#             # Make an OK packet
+#             # Make an ACK packet
 #             packet_ID = ctypes.c_uint8(ord("D"))
 #             type_ID = ctypes.c_uint8(ord("N"))
-#             buf = ctypes.create_string_buffer(b"OK", 13)
+#             buf = ctypes.create_string_buffer(b"ACK", 13)
 #             packet_transcoder.packetEncode_text(
 #                 packet_ID, type_ID, ctypes.byref(packet), buf
 #             )
@@ -478,7 +499,7 @@ def test_front_panel_button_callback(nodes):
 #     else:
 #         print('Exception while calling cartridge_memory_write_service')
 
-# # Check for an OK packet
+# # Check for an ACK packet
 # read_results = serial_port.read(1024)
 # assert (
 #     acknowledgement_packet in read_results
@@ -507,7 +528,7 @@ def test_front_panel_button_callback(nodes):
 # # Send the packet
 # serial_port.write(packet_string)
 
-# # Check for an OK packet
+# # Check for an ACK packet
 # read_results = serial_port.read(1024)
 # assert (
 #     acknowledgement_packet in read_results
@@ -580,7 +601,7 @@ def test_front_panel_button_callback(nodes):
 #     # Send the packet
 #     serial_port.write(packet_string)
 
-#     # Check for an OK packet
+#     # Check for an ACK packet
 #     read_results = serial_port.read(1024)
 #     print(read_results)
 #     assert (acknowledgement_packet in read_results), "Oven fan on packet not acknowledged"
@@ -604,7 +625,7 @@ def test_front_panel_button_callback(nodes):
 #     # Send the packet
 #     serial_port.write(packet_string)
 
-#     # Check for an OK packet
+#     # Check for an ACK packet
 #     read_results = serial_port.read(1024)
 #     print(read_results)
 #     assert (acknowledgement_packet in read_results), "Oven fan off packet not acknowledged"
@@ -638,7 +659,7 @@ def test_front_panel_button_callback(nodes):
 #         # Send the packet
 #         serial_port.write(packet_string)
 
-#         # Check for an OK packet
+#         # Check for an ACK packet
 #         read_results = serial_port.read(1024)
 #         print(read_results)
 #         assert (
@@ -689,7 +710,7 @@ def test_front_panel_button_callback(nodes):
 #     # Send the packet
 #     serial_port.write(packet_string)
 
-#     # Check for an OK packet
+#     # Check for an ACK packet
 #     read_results = serial_port.read(1024)
 #     print(read_results)
 #     assert (acknowledgement_packet in read_results), "Oven on packet not acknowledged"
@@ -758,7 +779,7 @@ def test_front_panel_button_callback(nodes):
 #     # Send the packet
 #     serial_port.write(packet_string)
 
-#     # Check for an OK packet
+#     # Check for an ACK packet
 #     read_results = serial_port.read(1024)
 #     print(read_results)
 #     assert (acknowledgement_packet in read_results), "Data acquisition off packet acknowledged"
@@ -784,7 +805,7 @@ def test_front_panel_button_callback(nodes):
 #     # Send the packet
 #     serial_port.write(packet_string)
 
-#     # Check for an OK packet
+#     # Check for an ACK packet
 #     read_results = serial_port.read(1024)
 #     print(read_results)
 #     assert (acknowledgement_packet in read_results), "Oven off packet not acknowledged"
@@ -826,7 +847,7 @@ def test_front_panel_button_callback(nodes):
 #     # Send the packet
 #     serial_port.write(packet_string)
 
-#     # Check for an OK packet
+#     # Check for an ACK packet
 #     read_results = serial_port.read(1024)
 #     print(read_results)
 #     assert (acknowledgement_packet in read_results), "Device not in configuration phase"

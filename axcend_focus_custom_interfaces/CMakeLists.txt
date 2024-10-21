@@ -13,24 +13,22 @@ find_package(builtin_interfaces REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 set(msg_files
-  "msg/CartridgeStatus.msg"
   "msg/CartridgeDetectorStatus.msg"
+  "msg/CartridgeMemory.msg"
+  "msg/CartridgeOvenControl.msg"
   "msg/CartridgeOvenStatus.msg"
+  "msg/CartridgeStatus.msg"
+  "msg/InstrumentState.msg"
   "msg/PumpStatus.msg"
   "msg/ValveStatus.msg"
-  "msg/PumpControlMode.msg"
-  "msg/MethodInjectionType.msg"
 )
 
 set(action_files
-    "action/CartridgeOvenPreheat.action"
+    "action/CartridgeOvenSet.action"
     "action/Method.action"
     "action/Pump.action"
-    "action/PumpMove.action"
     "action/PumpPositioning.action"
-    "action/PumpService.action"
-    "action/PumpSystemStabilization.action"
-    "action/PumpVoidRemoval.action"
+    "action/PumpPressurizeSystem.action"
     "action/SolventExchange.action"
     "action/ValveRotate.action"
 )
