@@ -2,8 +2,9 @@
 # Interface for filling the pumps to a specific volume
 
 # Goal definition
-int32[] volume # In uL, index 0 is the volume for pump 0, etc.
-
+# Set the pump position via volume or percentage. If both are set, action will use volume.
+float32[2] volume # In uL, index 0 is the volume for pump 0, accurate to 0.1 uL.
+float32[2] percentage # In percent, index 0 is the percentage for pump 0, accurate to 0.1 percent. Example, 20.5 = 20.5%
 ---
 # Result definition
 bool success
