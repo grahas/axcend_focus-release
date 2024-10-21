@@ -1,0 +1,9 @@
+# Con
+
+oven:
+    at_target_temperature_tolerance: 0.5 # The sensor value should read +- of the target value. ie target 50 degree C 50.5 is ok to start
+    timeout: 20 # How long to wait to get to temperature in minutes
+
+pump:
+    pressure_mode_fill_percentage: 95 # Starting point when in pressure mode
+    disposition_mode_safety_margin_percentage: 5 # How much overhead to apply when filling the pumps
