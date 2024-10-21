@@ -17,6 +17,7 @@ from std_msgs.msg import String
 
 from axcend_focus_legacy_compatibility_layer.legacy_compatibility_interface_node import \
     LegacyCompatibilityInterface
+from axcend_focus_device_config import device_config
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -255,14 +256,10 @@ def clear():
 
 
 @rpc2_blueprint.route("/deviceconfig", methods=["GET"])
-def device_config():
+def deviceconfig():
     """Return the device configuration."""
-    system_parameters_file_path = os.environ.get("SYS_PARAMS_FILE")
-
-    # Get the json file with explicit encoding
-    with open(system_parameters_file_path, "r", encoding="utf-8") as file:
-        data = json.load(file)
-        del data["OutputEvents"]
+    data = device_config.system_parameter_read_all()
+    del data["OutputEvents"]
     return generate_json_response("deviceconfig", data)
 
 

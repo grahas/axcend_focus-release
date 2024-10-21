@@ -4,7 +4,7 @@ package_name = 'axcend_focus_test_utils_package'
 
 setup(
     name=package_name,
-    version='3.1.5',
+    version='3.1.6',
     packages=[package_name],
     data_files=[
         ('share/ament_index/resource_index/packages',
