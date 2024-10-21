@@ -1,0 +1,9 @@
+# Action will bring the system up to the desired pressure
+# Goal definition
+uint32 pressure # The desired pressure in psi
+---
+# Result definition
+bool success # True if the pump was able to complete the action
+---
+# Feedback definition
+int32 pressure_different # The difference between the desired pressure and the actual pressure
