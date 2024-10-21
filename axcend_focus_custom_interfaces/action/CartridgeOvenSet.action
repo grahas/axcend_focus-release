@@ -1,0 +1,12 @@
+#Goal
+# This action will set the target temperature of the cartridge oven 
+# and wait until the oven reaches the target temperature
+CartridgeOvenControl oven_control # The oven control settings
+
+---
+#Result
+bool is_at_target_temperature # True if the oven is at the target temperature
+
+---
+#Feedback
+float32 temperature_delta # The difference between the target temperature and the current temperature
