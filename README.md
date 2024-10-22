@@ -1,3 +1,34 @@
+## axcend_focus (humble) - 3.1.8-1
+
+The packages in the `axcend_focus` repository were released into the `humble` distro by running `/usr/bin/bloom-release --rosdistro humble axcend_focus` on `Tue, 22 Oct 2024 17:45:10 -0000`
+
+These packages were released:
+- `axcend_focus_custom_interfaces`
+- `axcend_focus_device_config`
+- `axcend_focus_front_panel_button`
+- `axcend_focus_launch`
+- `axcend_focus_legacy_compatibility_layer`
+- `axcend_focus_operation`
+- `axcend_focus_ros2_firmware_bridge`
+- `axcend_focus_test_utils_package`
+
+Version of package(s) in repository `axcend_focus`:
+
+- upstream repository: https://github.com/grahas/axcend_focus.git
+- release repository: unknown
+- rosdistro version: `null`
+- old version: `null`
+- new version: `3.1.8-1`
+
+Versions of tools used:
+
+- bloom version: `0.11.2`
+- catkin_pkg version: `0.5.2`
+- rosdep version: `0.22.2`
+- rosdistro version: `0.9.0`
+- vcstools version: `0.1.42`
+
+
 ## axcend_focus (foxy) - 3.1.8-1
 
 The packages in the `axcend_focus` repository were released into the `foxy` distro by running `/usr/bin/bloom-release --rosdistro foxy axcend_focus` on `Mon, 21 Oct 2024 21:46:59 -0000`
