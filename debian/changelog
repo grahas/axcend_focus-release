@@ -1,0 +1,26 @@
+ros-humble-axcend-focus-device-config (3.1.8-1jammy) jammy; urgency=high
+
+  * fix path
+  * Contributors: Graham Harrison
+
+ -- ubuntu <graham.harrison@axcendcorp.com>  Mon, 21 Oct 2024 06:00:00 -0000
+
+ros-humble-axcend-focus-device-config (3.1.7-1jammy) jammy; urgency=high
+
+  * add dependencies
+  * Contributors: Graham Harrison
+
+ -- ubuntu <graham.harrison@axcendcorp.com>  Mon, 21 Oct 2024 06:00:00 -0000
+
+ros-humble-axcend-focus-device-config (3.1.6-1jammy) jammy; urgency=high
+
+  * matched version numbers
+  * update changelog
+  * updates
+  * Contributors: Graham Harrison
+  * updates
+  * Contributors: Graham Harrison
+
+ -- ubuntu <graham.harrison@axcendcorp.com>  Mon, 21 Oct 2024 06:00:00 -0000
+
+
